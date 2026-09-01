@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 selection:bg-emerald-500 selection:text-white;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Efeito de Botão 3D Tátil estilo Duolingo */
+.btn-duo-green {
+  @apply bg-emerald-500 hover:bg-emerald-400 active:translate-y-1 text-white font-extrabold rounded-2xl transition-all shadow-[0_4px_0_#059669] active:shadow-[0_0px_0_#059669];
+}
+
+.btn-duo-blue {
+  @apply bg-indigo-600 hover:bg-indigo-500 active:translate-y-1 text-white font-extrabold rounded-2xl transition-all shadow-[0_4px_0_#4338CA] active:shadow-[0_0px_0_#4338CA];
+}
+
+.btn-duo-yellow {
+  @apply bg-amber-500 hover:bg-amber-400 active:translate-y-1 text-slate-900 font-extrabold rounded-2xl transition-all shadow-[0_4px_0_#D97706] active:shadow-[0_0px_0_#D97706];
+}
+
+.btn-duo-red {
+  @apply bg-rose-500 hover:bg-rose-400 active:translate-y-1 text-white font-extrabold rounded-2xl transition-all shadow-[0_4px_0_#BE123C] active:shadow-[0_0px_0_#BE123C];
+}
+
+.btn-duo-slate {
+  @apply bg-slate-800 hover:bg-slate-700 active:translate-y-1 text-slate-200 font-bold rounded-2xl transition-all shadow-[0_4px_0_#0F172A] active:shadow-[0_0px_0_#0F172A];
+}
+
+/* Flashcard 3D Flip */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Scrollbar customizada e moderna */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}

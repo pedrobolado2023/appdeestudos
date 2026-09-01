@@ -1,0 +1,22 @@
+# QA - Estude para Concursos
+> Plataforma inteligente e gamificada para preparação de concursos públicos federais, estaduais e municipais.
+
+## Sobre a Aplicação
+O **QA - Estude para Concursos** é uma plataforma educacional de alta performance desenvolvida para acelerar a aprovação em certames públicos. O sistema integra:
+1. **Gamificação estilo Duolingo**: Trilhas de aprendizagem divididas por disciplinas e fases desbloqueáveis, sistema de XP, ligas semanais, corações (vidas) e ofensivas diárias (streaks).
+2. **Repetição Espaçada com Algoritmo Anki SM-2**: Motor pedagógico baseado no algoritmo SuperMemo SM-2 para cálculo de intervalos ideais de retenção e fixação de memória de longo prazo para lei seca, prazos e jurisprudência.
+3. **RAG Local & Geração Anti-Alucinação de Questões**: Processamento e compressão de PDFs de editais e apostilas com indexação vetorial e geração de questões fiéis com citação expressa do dispositivo legal.
+4. **Analisador de Editais por IA**: Extração automática do conteúdo programático, identificação da banca examinadora (CEBRASPE, FGV, FCC, VUNESP, CESGRANRIO) e reconfiguração dinâmica do ciclo de estudos e peso das matérias.
+
+## Disciplinas e Bancas Atendidas
+- **Direito Constitucional**: CF/88, Direitos Fundamentais, Organização do Estado e dos Poderes.
+- **Direito Administrativo**: Princípios (LIMPE), Atos Administrativos, Licitações e Contratos (Lei 14.133/21).
+- **Língua Portuguesa**: Sintaxe, Regência, Crase, Pontuação e Interpretação Textual.
+- **Raciocínio Lógico & Matemática**: Lógica Proposicional, Tabela-Verdade, Equivalências e Probabilidade.
+- **Direito Penal e Processual Penal**: Inquérito, Ação Penal, Provas, Crimes contra a Pessoa e Patrimônio.
+- **Bancas**: CEBRASPE (Certo/Errado), FGV, FCC, VUNESP, CESGRANRIO.
+
+## Recursos Tecnológicos
+- **Acesso Web e Mobile PWA**: Interface ultra-rápida, modo escuro/claro, feedback sonoro nativo via Web Audio API.
+- **Trial Gratuito de 7 Dias**: Acesso irrestrito a todas as funcionalidades para novos alunos.
+- **Planos Acessíveis**: R$ 29,99/mês (menos de R$ 1,00 por dia) com liberação instantânea via PIX.

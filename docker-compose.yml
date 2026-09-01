@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: qa-concursos-app:latest
+    container_name: qa-concursos
+    restart: unless-stopped
+    ports:
+      - "3333:3333"
+    environment:
+      - NODE_ENV=production
+      - PORT=3333
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GOOGLE_ADSENSE_PUB_ID=${GOOGLE_ADSENSE_PUB_ID:-pub-3709245247171200}
+    volumes:
+      - qa_app_data:/app/data
+
+volumes:
+  qa_app_data:
+    driver: local

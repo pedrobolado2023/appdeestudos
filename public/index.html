@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>QA - Estude para Concursos | Gamificação Duolingo & Repetição Espaçada Anki SM-2</title>
+  
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="apple-touch-icon" href="/icon.svg">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="QA Concursos">
+  <meta name="theme-color" content="#0F172A">
+
+  <!-- Google AdSense Oficial (Monetização Ativa) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3709245247171200" crossorigin="anonymous"></script>
+
+  <!-- SEO & GEO Meta Tags -->
+  <meta name="description" content="Plataforma de alta performance para concursos públicos com Trilha Gamificada Duolingo, Repetição Espaçada Anki SM-2, RAG com PDFs próprios e simulados das bancas CEBRASPE, FGV, FCC e VUNESP.">
+  <meta name="keywords" content="concursos públicos, anki sm-2, duolingo concursos, simulados cebraspe, questões comentadas, direito constitucional, vunesp, fgv, sedes df">
+  <meta property="og:title" content="QA - Estude para Concursos">
+  <meta property="og:description" content="Acelere sua aprovação com método comprovado: Gamificação + Anki SM-2 + RAG Anti-Alucinação.">
+  <meta property="og:type" content="website">
+
+  <!-- Schema.org JSON-LD Structured Data for AI & Search Engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "QA - Estude para Concursos",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web, Android, iOS (PWA)",
+        "offers": {
+          "@type": "Offer",
+          "price": "29.99",
+          "priceCurrency": "BRL"
+        },
+        "description": "Aplicativo de preparação para concursos públicos com gamificação estilo Duolingo, repetição espaçada Anki SM-2 e geração de questões RAG com citação de lei seca."
+      }
+    ]
+  }
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Outfit', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      font-family: 'Outfit', sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* 3D TACTILE BUTTONS */
+    .btn-3d-green {
+      background-color: #10B981;
+      box-shadow: 0 4px 0 #059669;
+      transition: all 0.1s ease;
+    }
+    .btn-3d-green:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #059669;
+    }
+
+    .btn-3d-blue {
+      background-color: #4F46E5;
+      box-shadow: 0 4px 0 #3730A3;
+      transition: all 0.1s ease;
+    }
+    .btn-3d-blue:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #3730A3;
+    }
+
+    .btn-3d-purple {
+      background-color: #8B5CF6;
+      box-shadow: 0 4px 0 #6D28D9;
+      transition: all 0.1s ease;
+    }
+    .btn-3d-purple:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #6D28D9;
+    }
+
+    .btn-3d-red {
+      background-color: #EF4444;
+      box-shadow: 0 4px 0 #B91C1C;
+      transition: all 0.1s ease;
+    }
+    .btn-3d-red:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #B91C1C;
+    }
+
+    .btn-3d-yellow {
+      background-color: #F59E0B;
+      box-shadow: 0 4px 0 #B45309;
+      transition: all 0.1s ease;
+    }
+    .btn-3d-yellow:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #B45309;
+    }
+
+    /* 3D PERSPECTIVE FLIP CARD */
+    .perspective-card {
+      perspective: 1000px;
+    }
+    .flip-inner {
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+    .rotate-180-back {
+      transform: rotateY(180deg);
+    }
+
+    .card-shadow {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.3);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Mobile Container Wrapper -->
+  <div id="app-wrapper" class="w-full max-w-md min-h-screen bg-slate-900 border-x border-slate-800 flex flex-col justify-between shadow-2xl relative">
+
+    <!-- Top Header -->
+    <header id="app-header" class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3.5 py-3 flex items-center justify-between shadow-sm">
+      <!-- Streak -->
+      <div class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2 py-1.5 rounded-2xl shadow-sm" title="Ofensiva diária">
+        <i data-lucide="flame" class="w-4 h-4 text-amber-500 fill-amber-500 animate-pulse"></i>
+        <span id="header-streak" class="text-xs font-black text-amber-400">4</span>
+      </div>
+
+      <!-- XP -->
+      <div class="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 px-2 py-1.5 rounded-2xl shadow-sm" title="Experiência total">
+        <i data-lucide="zap" class="w-4 h-4 text-emerald-400 fill-emerald-400"></i>
+        <span id="header-xp" class="text-xs font-black text-emerald-400">340</span>
+      </div>
+
+      <!-- Vidas -->
+      <button onclick="handleHeartClick()" id="header-hearts-btn" class="flex items-center gap-1 bg-rose-500/10 border border-rose-500/30 px-2 py-1.5 rounded-2xl shadow-sm hover:scale-105 transition-transform" title="Vidas">
+        <i id="heart-icon" data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i>
+        <span id="header-hearts" class="text-xs font-black text-rose-400">5/5</span>
+      </button>
+
+      <!-- BOTÃO 📱 TESTAR NO CELULAR (QR CODE & PWA) -->
+      <button onclick="openModal('mobile-app-modal')" class="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 rounded-2xl text-[11px] font-black transition-all shadow-sm active:scale-95" title="Abrir e Instalar no Celular">
+        <i data-lucide="smartphone" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span>Celular</span>
+      </button>
+
+      <!-- Controls: Som & Tema & VIP Badge -->
+      <div class="flex items-center gap-1">
+        <!-- Som -->
+        <button id="sound-btn" onclick="toggleSound()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition-colors" title="Alternar Som">
+          <i id="sound-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+        </button>
+
+        <!-- Tema Dark/Light -->
+        <button id="theme-btn" onclick="toggleTheme()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition-colors" title="Alternar Tema">
+          <i id="theme-icon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-400"></i>
+        </button>
+
+        <!-- Badge de Assinatura -->
+        <button onclick="openModal('paywall-modal')" id="header-plan-btn" class="flex items-center gap-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-2 py-1.5 rounded-2xl text-[10px] font-black shadow-[0_2px_0_#B45309]">
+          <i data-lucide="crown" class="w-3 h-3 fill-slate-950"></i>
+          <span id="header-plan">VIP</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- BANNER DE INSTALAÇÃO PWA (QUANDO ACESSADO NO CELULAR) -->
+    <div id="pwa-install-banner" class="hidden bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-4 py-2.5 flex items-center justify-between shadow-md text-xs font-bold">
+      <div class="flex items-center gap-2">
+        <i data-lucide="download-cloud" class="w-4 h-4 text-white"></i>
+        <span>Instalar QA Concursos no celular?</span>
+      </div>
+      <button onclick="installPwaApp()" class="bg-white text-slate-950 px-3 py-1 rounded-xl text-[11px] font-black shadow-sm active:scale-95">
+        INSTALAR
+      </button>
+    </div>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main id="main-content" class="flex-1 p-4 pb-28">
+
+      <!-- 1. ABA TRILHA DUOLINGO & ANÁLISE DE EDITAL -->
+      <div id="tab-map" class="space-y-4">
+        <!-- Banner de Início -->
+        <div class="bg-gradient-to-r from-emerald-600 via-teal-700 to-indigo-700 rounded-3xl p-5 shadow-lg relative overflow-hidden text-white border border-emerald-500/20">
+          <div class="absolute -right-3 -bottom-3 opacity-15 text-7xl font-black">🤝</div>
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="bg-white/20 text-white border border-white/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full backdrop-blur-sm">
+              Trilha de Aprovação
+            </span>
+            <button onclick="openModal('edital-modal')" class="bg-amber-400 text-slate-950 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm hover:bg-amber-300 transition-colors">
+              <i data-lucide="target" class="w-3 h-3"></i> Mudar Concurso
+            </button>
+          </div>
+          <h2 id="banner-contest-title" class="text-lg font-black tracking-tight">SEDES/DF - Assistência Social</h2>
+          <p id="banner-contest-banca" class="text-xs text-emerald-100 mt-0.5 font-medium">Banca: IBFC / CEBRASPE • Metodologia Adaptada ao Edital</p>
+        </div>
+
+        <!-- Card de Estratégia do Edital Analisado pela IA -->
+        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 card-shadow space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-black uppercase text-indigo-400 tracking-wider flex items-center gap-1">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i> Metodologia do Edital
+            </span>
+            <span id="edital-area-badge" class="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-indigo-500/30">
+              SEDES DF
+            </span>
+          </div>
+          <p id="edital-strategy-text" class="text-xs text-slate-300 leading-relaxed font-medium">
+            Ciclo focado em LOAS (Lei 8.742/93), SUAS, ECA (Lei 8.069/90), LC 840/2011 e LODF.
+          </p>
+          <div id="edital-weights-list" class="flex gap-1.5 overflow-x-auto pt-1 pb-1">
+            <!-- Pílulas de matérias e pesos inseridas via JS -->
+          </div>
+        </div>
+
+        <!-- BANNER DE ANÚNCIO GOOGLE ADS (APENAS PLANO FREE) -->
+        <div id="map-ad-banner" class="bg-gradient-to-r from-slate-850 to-slate-800 border border-slate-700 rounded-2xl p-3.5 flex items-center justify-between card-shadow">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-black text-xs shrink-0">
+              AD
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5 mb-0.5">
+                <span class="bg-amber-500 text-slate-950 text-[8px] font-black uppercase px-1 rounded">Google Ads</span>
+                <p class="text-xs font-bold text-slate-100">Gran Cursos Online 2026</p>
+              </div>
+              <p class="text-[10px] text-slate-300">Cursos completos com 60% OFF para SEDES/DF e Tribunais!</p>
+            </div>
+          </div>
+          <button onclick="openModal('paywall-modal')" class="text-[9px] font-black text-amber-400 hover:underline shrink-0 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-lg">Sem Ads (VIP)</button>
+        </div>
+
+        <!-- Árvore de Fases Baseada no Edital -->
+        <div id="stages-container" class="flex flex-col items-center space-y-12 relative py-4">
+          <div class="absolute top-4 bottom-4 w-2.5 bg-slate-800 rounded-full z-0"></div>
+          <!-- Nós inseridos via JS -->
+        </div>
+      </div>
+
+      <!-- 2. ABA ARENA DE QUESTÕES INFINITAS -->
+      <div id="tab-quiz" class="hidden space-y-4">
+        
+        <!-- CARD DE PROGRESSO DA FASE ATUAL & BOTÃO DE ANÚNCIO PREMIADO -->
+        <div id="quiz-stage-progress-card" class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-3.5 card-shadow space-y-2">
+          <div class="flex items-center justify-between text-xs font-black">
+            <span id="quiz-stage-title" class="text-slate-100 flex items-center gap-1.5">
+              <span id="quiz-stage-icon">🎯</span> <span id="quiz-stage-name">Fase 1: LOAS e SUAS</span>
+            </span>
+            <span id="quiz-stage-counter" class="text-emerald-400 font-bold text-[11px] bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">0/3 Acertos</span>
+          </div>
+          <div class="w-full bg-slate-700/60 rounded-full h-2.5 overflow-hidden">
+            <div id="quiz-stage-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div id="quiz-ad-shortcut" class="flex items-center justify-between pt-1 border-t border-slate-700/60">
+            <span class="text-[10px] text-slate-400">Precisa de vidas?</span>
+            <button onclick="startRewardedAd()" class="text-[10px] font-black text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-xl flex items-center gap-1 hover:bg-amber-500/20 active:scale-95 transition-all shadow-sm">
+              <i data-lucide="play-circle" class="w-3 h-3 text-amber-400"></i>
+              <span>Ver Anúncio (+3 Vidas ❤️)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- BANNER DE ANÚNCIO NO QUIZ (APENAS PLANO FREE) -->
+        <div id="quiz-ad-banner" class="bg-gradient-to-r from-slate-850 to-slate-800 border border-slate-700 rounded-2xl p-3 flex items-center justify-between card-shadow">
+          <div class="flex items-center gap-2.5">
+            <span class="bg-amber-500/20 text-amber-300 text-[8px] font-black uppercase px-1.5 py-0.5 rounded border border-amber-500/30">AdMob</span>
+            <div>
+              <p class="text-xs font-bold text-slate-200">Simulados Inéditos CEBRASPE</p>
+              <p class="text-[10px] text-slate-400">Treine com milhares de questões comentadas</p>
+            </div>
+          </div>
+          <button onclick="openModal('paywall-modal')" class="text-[9px] font-black text-amber-400 hover:underline shrink-0">Remover Ads</button>
+        </div>
+
+        <!-- Top Toolbar de Questões & Filtros -->
+        <div class="flex items-center justify-between gap-2">
+          <select id="subject-filter" onchange="filterQuestionsBySubject()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-200 outline-none shadow-sm flex-1 truncate">
+            <option value="all">📚 Todas as Matérias do Edital</option>
+            <option value="Legislação de Assistência Social">Legislação Social (LOAS/SUAS)</option>
+            <option value="Direito da Criança e Adolescente">ECA & Idoso</option>
+            <option value="Legislação do DF">Legislação do DF (LC 840/LODF)</option>
+            <option value="Língua Portuguesa">Língua Portuguesa</option>
+            <option value="Direito Constitucional">Direito Constitucional</option>
+          </select>
+
+          <button onclick="generateNewAiQuestion()" class="btn-3d-purple text-white px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-sm shrink-0">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Nova Questão IA</span>
+          </button>
+
+          <button onclick="openModal('pdf-modal')" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1.5 rounded-xl flex items-center gap-1 hover:bg-emerald-500/20 transition-colors shadow-sm shrink-0">
+            <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>PDFs</span>
+          </button>
+        </div>
+
+        <!-- Badges da Questão Atual -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span id="quiz-banca" class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-lg uppercase shadow-sm">IBFC / CEBRASPE</span>
+            <span id="quiz-subject" class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-lg truncate max-w-[180px] border border-slate-700">Legislação Social</span>
+          </div>
+          <span id="quiz-type-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-lg">Múltipla Escolha</span>
+        </div>
+
+        <!-- Enunciado -->
+        <div class="bg-slate-800/90 border border-slate-700/80 rounded-3xl p-5 card-shadow">
+          <p id="quiz-statement" class="text-sm font-semibold text-slate-100 leading-relaxed whitespace-pre-line">
+            Carregando questão...
+          </p>
+        </div>
+
+        <!-- Alternativas -->
+        <div id="quiz-options" class="space-y-3"></div>
+
+        <!-- Explicação da IA & Base Legal + Botão de Transformar em Flashcard -->
+        <div id="quiz-explanation-box" class="hidden p-4 rounded-2xl border space-y-3 card-shadow">
+          <div id="quiz-status-badge" class="flex items-center gap-2 font-black text-sm"></div>
+          <p id="quiz-explanation-text" class="text-xs text-slate-200 leading-relaxed font-medium"></p>
+          
+          <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl flex items-start gap-2 text-[11px] text-amber-200">
+            <i data-lucide="scale" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+            <div>
+              <span class="font-bold text-amber-300 block mb-0.5">Fundamentação Jurídica / Lei Seca:</span>
+              <span id="quiz-legal-basis" class="font-medium text-slate-300"></span>
+            </div>
+          </div>
+
+          <!-- BOTÃO ⚡ TRANSFORMAR EM FLASHCARD ANKI -->
+          <button id="convert-anki-btn" onclick="convertCurrentQuestionToAnki()" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98]">
+            <i data-lucide="brain" class="w-3.5 h-3.5 text-amber-300"></i>
+            <span>⚡ Salvar no Deck Anki para Revisão SM-2</span>
+          </button>
+        </div>
+
+        <!-- Botão de Ação -->
+        <button id="quiz-action-btn" onclick="handleQuizAction()" class="w-full py-4 rounded-2xl font-extrabold text-sm btn-3d-green text-white mt-4 tracking-wide shadow-md">
+          VERIFICAR RESPOSTA
+        </button>
+      </div>
+
+      <!-- 3. ABA ANKI FLASHCARDS (SM-2) -->
+      <div id="tab-anki" class="hidden space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="brain" class="w-6 h-6 text-indigo-400"></i>
+            <div>
+              <h3 class="text-base font-black text-slate-100">Anki: Repetição Espaçada</h3>
+              <p class="text-[11px] text-slate-400">Motor SuperMemo SM-2 para retenção de lei seca</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span id="anki-deck-counter" class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-md font-black">
+              4 Cards
+            </span>
+            <button onclick="openModal('new-card-modal')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-black px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm transition-transform active:scale-95">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Card
+            </button>
+          </div>
+        </div>
+
+        <!-- Flashcard com Efeito 3D Flip -->
+        <div class="perspective-card w-full min-h-[300px] cursor-pointer mt-2" onclick="flipFlashcard()">
+          <div id="anki-card-inner" class="flip-inner relative w-full min-h-[300px] bg-slate-800/95 border-2 border-slate-700 rounded-3xl p-6 card-shadow flex flex-col justify-between">
+            
+            <!-- Frente -->
+            <div id="anki-front" class="backface-hidden flex flex-col justify-between h-full space-y-6">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] uppercase font-black text-slate-400 tracking-wider">FRENTE • CONCEITO</span>
+                <span id="anki-subject-badge" class="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-indigo-500/30">SEDES DF</span>
+              </div>
+              <p id="anki-front-text" class="text-base font-bold text-slate-100 leading-relaxed text-center my-auto">
+                O que é a Assistência Social segundo o Art. 1º da LOAS (Lei 8.742/93)?
+              </p>
+              <p class="text-xs text-slate-400 text-center flex items-center justify-center gap-1 font-semibold">
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i> Toque no card para virar o verso
+              </p>
+            </div>
+
+            <!-- Verso (Flipped) -->
+            <div id="anki-back" class="rotate-180-back backface-hidden absolute inset-0 p-6 flex flex-col justify-between bg-slate-850 rounded-3xl border-2 border-indigo-500/80 shadow-md">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] uppercase font-black text-indigo-400 tracking-wider">VERSO • RESPOSTA & LEI SECA</span>
+                <span class="text-[10px] font-bold text-slate-400">Algoritmo SM-2</span>
+              </div>
+              <div id="anki-back-text" class="my-auto whitespace-pre-line text-xs font-bold text-slate-100 leading-relaxed bg-slate-900/90 p-4 rounded-2xl border border-slate-700 card-shadow">
+                A Assistência Social é Política de Seguridade Social NÃO CONTRIBUTIVA...
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-indigo-300 font-bold bg-indigo-950/40 p-2.5 rounded-xl border border-indigo-800/40">
+                <span>Intervalo: <strong id="anki-interval" class="text-white">1 dia</strong></span>
+                <span>Facilidade: <strong id="anki-ease" class="text-white">2.5</strong></span>
+                <span>Reps: <strong id="anki-reps" class="text-white">0</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões SM-2 de Avaliação -->
+        <div id="anki-controls" class="grid grid-cols-4 gap-2 pt-2">
+          <button onclick="reviewCard(1)" class="btn-3d-red py-3 rounded-2xl text-xs font-black text-white flex flex-col items-center shadow-md">
+            <span>Errei</span>
+            <span class="text-[9px] font-normal opacity-90">1 dia</span>
+          </button>
+          <button onclick="reviewCard(3)" class="btn-3d-yellow py-3 rounded-2xl text-xs font-black text-slate-950 flex flex-col items-center shadow-md">
+            <span>Difícil</span>
+            <span class="text-[9px] font-normal opacity-90">2 dias</span>
+          </button>
+          <button onclick="reviewCard(4)" class="btn-3d-blue py-3 rounded-2xl text-xs font-black text-white flex flex-col items-center shadow-md">
+            <span>Bom</span>
+            <span class="text-[9px] font-normal opacity-90">6 dias</span>
+          </button>
+          <button onclick="reviewCard(5)" class="btn-3d-green py-3 rounded-2xl text-xs font-black text-white flex flex-col items-center shadow-md">
+            <span>Fácil</span>
+            <span class="text-[9px] font-normal opacity-90">15 dias</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. ABA PERFIL -->
+      <div id="tab-stats" class="hidden space-y-5">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-5 flex items-center gap-4 card-shadow">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center text-xl font-black text-white shadow-md">
+            PP
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-100">Pedro Pereira</h3>
+            <p class="text-xs text-slate-400">pedro@concursos.com</p>
+            <div class="flex items-center gap-2 mt-1.5">
+              <span id="profile-plan-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black px-2 py-0.5 rounded-md">
+                Plano Free
+              </span>
+              <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-black px-2 py-0.5 rounded-md">
+                Nível 3
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botão Abrir App no Celular -->
+        <button onclick="openModal('mobile-app-modal')" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all active:scale-95">
+          <i data-lucide="smartphone" class="w-4 h-4 text-emerald-300"></i>
+          <span>INSTALAR APP NO MEU CELULAR (PWA) 📱</span>
+        </button>
+
+        <!-- Alternador de Teste de Monetização (FREE / VIP) -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-2 card-shadow">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+              <i data-lucide="crown" class="w-4 h-4 text-amber-400"></i> Modo de Assinatura & Monetização
+            </span>
+            <span id="plan-mode-label" class="text-[10px] font-black px-2 py-0.5 rounded bg-slate-700 text-slate-300">FREE</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Alterne entre o <strong>Plano Free</strong> (com vidas e anúncios) e o <strong>Plano VIP</strong> (vidas infinitas e sem anúncios) para testar os dois fluxos.
+          </p>
+          <button onclick="togglePlanSimulator()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-slate-950 font-black text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span id="toggle-plan-btn-text">Alternar para Plano VIP</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 card-shadow">
+            <span class="text-[11px] font-bold text-slate-400 block mb-1">Ofensiva Diária</span>
+            <span class="text-2xl font-black text-amber-400">4 dias 🔥</span>
+          </div>
+          <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 card-shadow">
+            <span class="text-[11px] font-bold text-slate-400 block mb-1">Taxa de Acertos</span>
+            <span class="text-2xl font-black text-emerald-400">91% 🎯</span>
+          </div>
+          <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 card-shadow">
+            <span class="text-[11px] font-bold text-slate-400 block mb-1">Total de XP</span>
+            <span class="text-2xl font-black text-indigo-400">340 XP ⚡</span>
+          </div>
+          <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 card-shadow">
+            <span class="text-[11px] font-bold text-slate-400 block mb-1">Retenção SM-2</span>
+            <span class="text-2xl font-black text-emerald-400">94% 🧠</span>
+          </div>
+        </div>
+
+        <div class="pt-2 text-center">
+          <a href="/privacy.html" target="_blank" class="text-[11px] text-slate-400 hover:text-slate-200 hover:underline inline-flex items-center gap-1">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Política de Privacidade & Termos de Uso (AdMob/Play Store)</span>
+          </a>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-6 py-3 flex items-center justify-between z-40 shadow-lg">
+      <button onclick="switchTab('map')" id="nav-map" class="flex flex-col items-center gap-1 text-emerald-400 transition-all font-black">
+        <i data-lucide="map" class="w-5 h-5"></i>
+        <span class="text-[10px]">Trilha</span>
+      </button>
+
+      <button onclick="switchTab('quiz')" id="nav-quiz" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold">
+        <i data-lucide="layers" class="w-5 h-5"></i>
+        <span class="text-[10px]">Questões</span>
+      </button>
+
+      <button onclick="switchTab('anki')" id="nav-anki" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold">
+        <i data-lucide="brain" class="w-5 h-5"></i>
+        <span class="text-[10px]">Anki SM-2</span>
+      </button>
+
+      <button onclick="switchTab('stats')" id="nav-stats" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold">
+        <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+        <span class="text-[10px]">Perfil</span>
+      </button>
+    </nav>
+
+    <!-- MODAL 📱 TESTAR NO CELULAR (QR CODE & LINK) -->
+    <div id="mobile-app-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-4 text-center max-h-[90vh] overflow-y-auto">
+        <button onclick="closeModal('mobile-app-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto shadow-sm">
+          <i data-lucide="smartphone" class="w-6 h-6"></i>
+        </div>
+
+        <div>
+          <h3 class="text-base font-black text-white">Instalar App no seu Celular</h3>
+          <p class="text-xs text-slate-300 mt-1">Conecte seu celular no mesmo Wi-Fi e acesse o endereço abaixo:</p>
+        </div>
+
+        <!-- Endereço IP em Destaque -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-3 text-center space-y-1">
+          <span class="text-[10px] text-slate-400 font-bold block uppercase">Endereço no Navegador do Celular:</span>
+          <p id="mobile-ip-link" class="text-sm font-mono font-black text-emerald-400 select-all">http://192.168.18.16:3333</p>
+        </div>
+
+        <!-- QR Code Visual -->
+        <div class="flex flex-col items-center justify-center p-3 bg-white rounded-2xl mx-auto w-44 shadow-md">
+          <img id="qr-code-img" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://192.168.18.16:3333" alt="QR Code do App" class="w-36 h-36 rounded-lg">
+          <span class="text-[9px] font-bold text-slate-900 mt-1">Aponte a câmera do celular</span>
+        </div>
+
+        <!-- Como Instalar (Android e iOS) -->
+        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-3 text-left space-y-2 text-xs text-slate-300">
+          <p class="font-bold text-slate-100 flex items-center gap-1">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Como transformar em App na tela inicial:
+          </p>
+          <div class="space-y-1 text-[11px] text-slate-300">
+            <p>🤖 <strong>No Android (Chrome):</strong> Toque no menu (3 pontinhos) ➔ <em>"Instalar aplicativo"</em> ou <em>"Adicionar à tela inicial"</em>.</p>
+            <p>🍎 <strong>No iPhone (Safari):</strong> Toque no botão Compartilhar ➔ <em>"Adicionar à Tela de Início"</em>.</p>
+          </div>
+        </div>
+
+        <button onclick="closeModal('mobile-app-modal')" class="w-full py-3 btn-3d-green text-white font-black text-xs rounded-2xl">
+          ENTENDI
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 🏆 FASE CONCLUÍDA / LEVEL UP -->
+    <div id="stage-completed-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="bg-gradient-to-b from-slate-850 to-slate-900 border-2 border-amber-500/60 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-5 text-center">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(245,158,11,0.5)] animate-bounce">
+          <span id="stage-completed-icon" class="text-4xl">⭐</span>
+        </div>
+
+        <div>
+          <span class="bg-amber-500/20 text-amber-300 text-[11px] font-black uppercase px-3 py-1 rounded-full border border-amber-500/30 tracking-wider">
+            Fase Concluída!
+          </span>
+          <h3 id="stage-completed-title" class="text-lg font-black text-white mt-2">Domínio do SUAS</h3>
+          <p class="text-xs text-slate-300 mt-1">Você atingiu a meta de acertos e desbloqueou a próxima fase da trilha!</p>
+        </div>
+
+        <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 flex items-center justify-around">
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold block">BÔNUS</span>
+            <span class="text-lg font-black text-amber-400">+50 XP ⚡</span>
+          </div>
+          <div class="w-px h-8 bg-slate-700"></div>
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold block">PRECISÃO</span>
+            <span class="text-lg font-black text-emerald-400">100% ⭐</span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <button onclick="advanceToNextStage()" class="w-full py-3.5 btn-3d-green text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md">
+            <span>AVANÇAR PARA PRÓXIMA FASE 🚀</span>
+          </button>
+          <button onclick="closeModal('stage-completed-modal'); switchTab('map');" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition-colors">
+            Ver Trilha no Mapa 🗺️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 💔 VIDAS ESGOTADAS (PAUSA / REWARDED AD / VIP) -->
+    <div id="no-hearts-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="bg-slate-900 border border-rose-500/50 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-4 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto shadow-sm">
+          <i data-lucide="heart-crack" class="w-8 h-8"></i>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-black text-white">Você ficou sem vidas! 💔</h3>
+          <p class="text-xs text-slate-300 mt-1">No plano gratuito, você precisa de vidas para responder questões. Escolha como recarregar:</p>
+        </div>
+
+        <!-- Opção 1: Assistir Anúncio -->
+        <button onclick="startRewardedAd()" class="w-full p-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl text-left transition-all shadow-md active:scale-[0.98]">
+          <div class="flex items-center justify-between mb-0.5">
+            <span class="text-xs font-black flex items-center gap-1.5">
+              <i data-lucide="play-circle" class="w-4 h-4 text-amber-300"></i> Assistir Vídeo Premiado
+            </span>
+            <span class="bg-emerald-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-md">+3 VIDAS ❤️</span>
+          </div>
+          <p class="text-[10px] text-indigo-200">Assista 5 segundos de anúncio para recarregar 3 vidas instantaneamente.</p>
+        </button>
+
+        <!-- Opção 2: Timer de Espera -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-3 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2 text-slate-300">
+            <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i>
+            <span class="font-bold">Recarga Automática:</span>
+          </div>
+          <span id="heart-countdown" class="text-amber-400 font-mono font-bold">04:59</span>
+        </div>
+
+        <!-- Opção 3: Assinar VIP -->
+        <button onclick="closeModal('no-hearts-modal'); openModal('paywall-modal');" class="w-full py-3 btn-3d-yellow text-slate-950 font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md">
+          <i data-lucide="crown" class="w-4 h-4"></i>
+          <span>VIRAR VIP • VIDAS INFINITAS (ZERO ANÚNCIOS)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 🎬 PLAYER DE ANÚNCIO (REWARDED VIDEO) -->
+    <div id="ad-player-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="bg-slate-900 border border-indigo-500/50 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-4 text-center">
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span class="bg-amber-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded">PUBLICIDADE PATROCINADA</span>
+          <span id="ad-countdown-text" class="text-indigo-400 font-bold font-mono">5s restantes</span>
+        </div>
+
+        <div class="w-full h-44 rounded-2xl bg-gradient-to-tr from-indigo-950 via-purple-950 to-slate-900 border border-slate-700 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+          <i data-lucide="sparkles" class="w-10 h-10 text-amber-400 mb-2 animate-bounce"></i>
+          <p class="text-sm font-black text-white">Preparatório Gran & Estratégia</p>
+          <p class="text-xs text-slate-300 mt-1">Concursos SEDES/DF, Tribunais e Policiais</p>
+          <div class="w-full bg-slate-800/80 rounded-full h-2 mt-4 overflow-hidden">
+            <div id="ad-progress-bar" class="bg-amber-400 h-full transition-all duration-1000" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <button id="ad-close-btn" disabled onclick="finishRewardedAd()" class="w-full py-3 bg-slate-800 text-slate-500 font-bold text-xs rounded-2xl cursor-not-allowed transition-all">
+          Aguarde o término do anúncio (5s)...
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 🤖 CONFIGURAR CHAVE GOOGLE GEMINI -->
+    <div id="gemini-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-4">
+        <button onclick="closeModal('gemini-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i>
+          <h3 class="text-base font-black text-slate-100">Google Gemini API Key</h3>
+        </div>
+
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Cole sua chave do <strong>Google Gemini</strong> para gerar questões inéditas infinitas e analisar editais por IA em tempo real.
+        </p>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Chave de API (Gemini Key):</label>
+            <input type="password" id="gemini-key-input" placeholder="Cole sua Chave do Google Gemini aqui..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-slate-100 outline-none focus:border-indigo-500">
+          </div>
+
+          <div id="gemini-key-status-msg" class="text-[11px] text-slate-400 font-medium hidden"></div>
+
+          <button id="save-gemini-btn" onclick="handleSaveGeminiKey()" class="w-full py-3 btn-3d-purple text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md">
+            <i data-lucide="plug" class="w-4 h-4"></i>
+            <span>SALVAR & ATIVAR IA</span>
+          </button>
+
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" class="block text-center text-[10px] text-indigo-400 hover:underline pt-1">
+            🔗 Obter chave gratuita no Google AI Studio (aistudio.google.com)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 🎯 ANALISAR EDITAL & ÁREAS (IA) -->
+    <div id="edital-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto">
+        <button onclick="closeModal('edital-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <i data-lucide="target" class="w-5 h-5 text-amber-400"></i>
+          <h3 class="text-base font-black text-slate-100">Analisar Edital & Definir Área</h3>
+        </div>
+
+        <p class="text-xs text-slate-300 leading-relaxed">
+          A IA lê o Edital, identifica o peso das matérias, a banca examinadora e <strong>reorganiza toda a sua trilha e questões</strong> automaticamente.
+        </p>
+
+        <!-- Seleção Rápida de Concursos Populares -->
+        <div class="space-y-2">
+          <label class="block text-[11px] font-bold text-slate-400">Escolha um Concurso ou Área:</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="selectQuickContest('Secretaria de Desenvolvimento Social do Distrito Federal (Sedes/DF)', 'Assistência Social')" class="p-3 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/50 rounded-xl text-left transition-all col-span-2 shadow-sm">
+              <span class="text-xs font-black text-emerald-300 block">🤝 SEDES / DF (Assistência Social)</span>
+              <span class="text-[10px] text-slate-300">LOAS, SUAS, ECA, LC 840/11, LODF</span>
+            </button>
+            <button onclick="selectQuickContest('Tribunal de Justiça - TJSP', 'Tribunais')" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-left transition-all">
+              <span class="text-xs font-bold text-slate-100 block">🏛️ Tribunais</span>
+              <span class="text-[10px] text-slate-400">TJ, TRT, TRE, TRF</span>
+            </button>
+            <button onclick="selectQuickContest('Polícia Federal & PRF', 'Policial')" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-left transition-all">
+              <span class="text-xs font-bold text-slate-100 block">🚨 Policial</span>
+              <span class="text-[10px] text-slate-400">PF, PRF, PC, PM</span>
+            </button>
+            <button onclick="selectQuickContest('Receita Federal / Auditor', 'Fiscal')" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-left transition-all">
+              <span class="text-xs font-bold text-slate-100 block">📊 Fiscal</span>
+              <span class="text-[10px] text-slate-400">Receita, SEFAZ, ISS</span>
+            </button>
+            <button onclick="selectQuickContest('Caixa Econômica Federal', 'Bancária')" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-left transition-all">
+              <span class="text-xs font-bold text-slate-100 block">🏦 Bancária</span>
+              <span class="text-[10px] text-slate-400">Caixa, BB, BACEN</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Envio de Edital Personalizado em PDF -->
+        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 space-y-3">
+          <span class="text-[11px] font-bold text-slate-300 block">Ou Envie o PDF do Seu Edital:</span>
+          <input type="text" id="custom-contest-name" placeholder="Nome do Concurso (Ex: SEDES/DF 2026)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-100 outline-none">
+          <input type="file" id="custom-edital-file" accept=".pdf" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500/20 file:text-amber-300">
+          <button onclick="handleCustomEditalSubmit()" class="w-full py-3 btn-3d-blue text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>ANALISAR EDITAL COM IA</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ➕ NOVO FLASHCARD MANUAL (ANKI) -->
+    <div id="new-card-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-4">
+        <button onclick="closeModal('new-card-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-400"></i>
+          <h3 class="text-base font-black text-slate-100">Criar Novo Flashcard</h3>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Frente (Pergunta / Conceito)</label>
+            <input type="text" id="new-card-front" placeholder="Ex: O BPC pode ser concedido a quem?" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-100 outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Verso (Resposta / Artigo de Lei)</label>
+            <textarea id="new-card-back" rows="3" placeholder="Ex: Idoso com 65+ anos ou PcD com renda per capita < 1/4 salário-mínimo (Art. 20 LOAS)." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-100 outline-none"></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 mb-1">Matéria</label>
+              <input type="text" id="new-card-subject" value="Legislação de Assistência Social" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-100 outline-none">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 mb-1">Tópico</label>
+              <input type="text" id="new-card-topic" value="LOAS / BPC" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-100 outline-none">
+            </div>
+          </div>
+          <button onclick="handleCreateManualCard()" class="w-full py-3 btn-3d-green text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md mt-2">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>SALVAR FLASHCARD</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL UPLOAD DE PDFs RAG -->
+    <div id="pdf-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto">
+        <button onclick="closeModal('pdf-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <i data-lucide="hard-drive" class="w-5 h-5 text-emerald-400"></i>
+          <h3 class="text-base font-black text-slate-100">Upload & Compactação de PDFs</h3>
+        </div>
+
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Envie apostilas ou leis. O sistema <strong>compacta em ~90%</strong> e gera novas questões fiéis!
+        </p>
+
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Disciplina / Matéria</label>
+            <input type="text" id="pdf-subject-input" value="Legislação de Assistência Social" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-100 outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Arquivo PDF</label>
+            <input type="file" id="pdf-file-input" accept=".pdf" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-500/20 file:text-emerald-300">
+          </div>
+          <button id="pdf-upload-btn" onclick="handleRealPdfUpload()" class="w-full py-3 btn-3d-green text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md">
+            <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+            <span id="pdf-upload-btn-text">COMPACTAR & ALIMENTAR RAG</span>
+          </button>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-wider">Documentos no Servidor</h4>
+          <div id="docs-list" class="space-y-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL PAYWALL (R$ 29,99/MÊS) -->
+    <div id="paywall-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative space-y-4">
+        <button onclick="closeModal('paywall-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto mb-2 shadow-sm">
+            <i data-lucide="crown" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-black text-slate-100">QA Concursos VIP</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Assinatura completa por <strong class="text-emerald-400">R$ 29,99/mês</strong> (~R$ 0,99/dia)</p>
+        </div>
+
+        <!-- Benefícios VIP -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 space-y-2.5 text-xs text-slate-200">
+          <div class="flex items-center gap-2 text-emerald-400 font-bold">
+            <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i>
+            <span>❤️ Vidas Infinitas (Estude sem limites ou pausas)</span>
+          </div>
+          <div class="flex items-center gap-2 text-emerald-400 font-bold">
+            <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i>
+            <span>🚫 ZERO Anúncios (Foco 100% livre de distrações)</span>
+          </div>
+          <div class="flex items-center gap-2 text-emerald-400 font-bold">
+            <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i>
+            <span>✨ Gerador IA Ilimitado & RAG sem restrições</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 text-center space-y-3">
+          <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase px-3 py-0.5 rounded-full border border-emerald-500/30">
+            Plano Mensal: R$ 29,99
+          </span>
+          <div class="flex justify-center">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 200 200'><rect width='200' height='200' fill='%23FFFFFF'/><rect x='20' y='20' width='60' height='60' fill='%230F172A'/><rect x='120' y='20' width='60' height='60' fill='%230F172A'/><rect x='20' y='120' width='60' height='60' fill='%230F172A'/><rect x='40' y='40' width='20' height='20' fill='%2310B981'/><rect x='140' y='40' width='20' height='20' fill='%2310B981'/><rect x='40' y='140' width='20' height='20' fill='%2310B981'/><rect x='90' y='90' width='20' height='20' fill='%2310B981'/></svg>" class="w-32 h-32 rounded-xl bg-white p-2 border border-slate-600 shadow-sm">
+          </div>
+          <button onclick="simulatePixPayment()" class="w-full py-3 btn-3d-green text-white font-black text-xs rounded-2xl tracking-wide shadow-md">
+            SIMULAR LIBERAÇÃO PIX (R$ 29,99)
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT DE PWA, SERVICE WORKER, INTERATIVIDADE E ÁUDIO -->
+  <script>
+    let currentTab = 'map';
+    let currentQuestionIndex = 0;
+    let selectedOptionId = null;
+    let hasAnswered = false;
+    let questionsData = [];
+    let flashcardsData = [];
+    let currentCardIndex = 0;
+    let isFlipped = false;
+    let soundEnabled = true;
+    let isDarkMode = true;
+    let stagesData = [];
+    let activeStage = null;
+    let currentUser = null;
+    let adInterval = null;
+    let deferredPrompt = null;
+
+    // ==========================================
+    // 📲 REGISTRO DE SERVICE WORKER & PWA INSTALL
+    // ==========================================
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('✓ Service Worker PWA registrado:', reg.scope);
+        }).catch(err => {
+          console.warn('Falha no Service Worker:', err);
+        });
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.classList.remove('hidden');
+    });
+
+    function installPwaApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('App instalado com sucesso!');
+          }
+          deferredPrompt = null;
+          document.getElementById('pwa-install-banner').classList.add('hidden');
+        });
+      } else {
+        openModal('mobile-app-modal');
+      }
+    }
+
+    // ==========================================
+    // 🔊 SINTETIZADOR DE ÁUDIO NATIVO (WEB AUDIO API)
+    // ==========================================
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playAudio(type) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'correct') {
+          [523.25, 659.25, 783.99].forEach((freq, i) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + i * 0.08);
+            g.gain.setValueAtTime(0.15, now + i * 0.08);
+            g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.35);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(now + i * 0.08);
+            o.stop(now + i * 0.08 + 0.36);
+          });
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.exponentialRampToValueAtTime(140, now + 0.3);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.31);
+        } else if (type === 'flip') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === 'level_up') {
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + i * 0.12);
+            g.gain.setValueAtTime(0.2, now + i * 0.12);
+            g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.45);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(now + i * 0.12);
+            o.stop(now + i * 0.12 + 0.47);
+          });
+        } else if (type === 'tap') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, now);
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        }
+      } catch (err) {}
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('sound-icon');
+      if (soundEnabled) {
+        icon.setAttribute('data-lucide', 'volume-2');
+        icon.className = 'w-3.5 h-3.5 text-emerald-400';
+        playAudio('tap');
+      } else {
+        icon.setAttribute('data-lucide', 'volume-x');
+        icon.className = 'w-3.5 h-3.5 text-slate-500';
+      }
+      lucide.createIcons();
+    }
+
+    // ==========================================
+    // 🌓 CONTROLE DE TEMA (DARK / LIGHT)
+    // ==========================================
+    function toggleTheme() {
+      isDarkMode = !isDarkMode;
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      const appWrapper = document.getElementById('app-wrapper');
+      const appHeader = document.getElementById('app-header');
+
+      if (isDarkMode) {
+        html.className = 'dark';
+        document.body.className = 'min-h-screen flex justify-center bg-slate-950 text-slate-100 font-sans antialiased';
+        appWrapper.className = 'w-full max-w-md min-h-screen bg-slate-900 border-x border-slate-800 flex flex-col justify-between shadow-2xl relative text-slate-100';
+        appHeader.className = 'sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3.5 py-3 flex items-center justify-between shadow-sm';
+        themeIcon.setAttribute('data-lucide', 'sun');
+        themeIcon.className = 'w-3.5 h-3.5 text-amber-400';
+      } else {
+        html.className = 'light';
+        document.body.className = 'min-h-screen flex justify-center bg-slate-100 text-slate-900 font-sans antialiased';
+        appWrapper.className = 'w-full max-w-md min-h-screen bg-white border-x border-slate-200 flex flex-col justify-between shadow-2xl relative text-slate-900';
+        appHeader.className = 'sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-3.5 py-3 flex items-center justify-between shadow-sm';
+        themeIcon.setAttribute('data-lucide', 'moon');
+        themeIcon.className = 'w-3.5 h-3.5 text-indigo-600';
+      }
+      playAudio('tap');
+      lucide.createIcons();
+    }
+
+    // ==========================================
+    // 🤖 CONFIGURAÇÃO GOOGLE GEMINI API KEY
+    // ==========================================
+    async function handleSaveGeminiKey() {
+      const input = document.getElementById('gemini-key-input');
+      const key = input.value.trim();
+      const statusMsg = document.getElementById('gemini-key-status-msg');
+      const btn = document.getElementById('save-gemini-btn');
+
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> <span>VALIDANDO CHAVE...</span>';
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/user/set-api-key', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ apiKey: key })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          playAudio('level_up');
+          confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+          statusMsg.className = 'text-[11px] text-emerald-400 font-bold block';
+          statusMsg.innerText = '✓ Google Gemini Conectado! Geração de IA ativada.';
+          document.getElementById('gemini-status-dot').className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+          document.getElementById('gemini-status-text').innerText = 'Gemini ON';
+          setTimeout(() => closeModal('gemini-modal'), 1200);
+        } else {
+          playAudio('wrong');
+          statusMsg.className = 'text-[11px] text-rose-400 font-bold block';
+          statusMsg.innerText = '✗ ' + (data.error || 'Erro ao validar a chave.');
+        }
+      } catch (err) {
+        statusMsg.className = 'text-[11px] text-rose-400 font-bold block';
+        statusMsg.innerText = '✗ Erro de conexão com o servidor.';
+      } finally {
+        btn.innerHTML = '<i data-lucide="plug" class="w-4 h-4"></i> <span>SALVAR & ATIVAR IA</span>';
+        lucide.createIcons();
+      }
+    }
+
+    // ==========================================
+    // 👑 ALTERNAR SIMULADOR DE PLANO FREE / VIP
+    // ==========================================
+    async function togglePlanSimulator() {
+      playAudio('tap');
+      try {
+        const res = await fetch('/api/user/toggle-plan', { method: 'POST' });
+        const data = await res.json();
+        playAudio(data.isPremium ? 'level_up' : 'tap');
+        if (data.isPremium) {
+          confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
+        }
+        alert(data.message);
+        await fetchUserProfile();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // ==========================================
+    // 🎬 SISTEMA DE ANÚNCIOS PREMIADOS (REWARDED ADS)
+    // ==========================================
+    function handleHeartClick() {
+      if (currentUser && currentUser.isPremium) {
+        alert('Você é VIP! Suas vidas são infinitas e você não perde vidas ao errar.');
+      } else {
+        openModal('no-hearts-modal');
+      }
+    }
+
+    function startRewardedAd() {
+      closeModal('no-hearts-modal');
+      openModal('ad-player-modal');
+      playAudio('tap');
+
+      let timeLeft = 5;
+      const countdownText = document.getElementById('ad-countdown-text');
+      const progressBar = document.getElementById('ad-progress-bar');
+      const closeBtn = document.getElementById('ad-close-btn');
+
+      progressBar.style.width = '0%';
+      closeBtn.disabled = true;
+      closeBtn.className = 'w-full py-3 bg-slate-800 text-slate-500 font-bold text-xs rounded-2xl cursor-not-allowed transition-all';
+      closeBtn.innerText = `Aguarde o término do anúncio (${timeLeft}s)...`;
+
+      if (adInterval) clearInterval(adInterval);
+
+      adInterval = setInterval(() => {
+        timeLeft -= 1;
+        const progress = ((5 - timeLeft) / 5) * 100;
+        progressBar.style.width = `${progress}%`;
+
+        if (timeLeft > 0) {
+          countdownText.innerText = `${timeLeft}s restantes`;
+          closeBtn.innerText = `Aguarde o término do anúncio (${timeLeft}s)...`;
+        } else {
+          clearInterval(adInterval);
+          countdownText.innerText = '✓ Recompensa Pronta!';
+          closeBtn.disabled = false;
+          closeBtn.className = 'w-full py-3 btn-3d-green text-white font-black text-xs rounded-2xl shadow-md transition-all animate-pulse';
+          closeBtn.innerText = 'RESGATAR +3 VIDAS ❤️';
+          playAudio('level_up');
+        }
+      }, 1000);
+    }
+
+    async function finishRewardedAd() {
+      playAudio('correct');
+      try {
+        const res = await fetch('/api/user/watch-ad', { method: 'POST' });
+        const data = await res.json();
+        confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+        closeModal('ad-player-modal');
+        alert(data.message || 'Parabéns! Você ganhou +3 vidas.');
+        await fetchUserProfile();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // ==========================================
+    // 🚀 INICIALIZAÇÃO
+    // ==========================================
+    async function init() {
+      lucide.createIcons();
+      await fetchUserProfile();
+      await fetchStages();
+      await fetchQuestions();
+      await fetchFlashcards();
+      await fetchDocuments();
+      startHeartRegenCountdown();
+    }
+
+    function startHeartRegenCountdown() {
+      setInterval(() => {
+        const cd = document.getElementById('heart-countdown');
+        if (!cd) return;
+        const now = new Date();
+        const mins = 4 - (now.getMinutes() % 5);
+        const secs = 59 - now.getSeconds();
+        cd.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    async function fetchUserProfile() {
+      try {
+        const res = await fetch('/api/user/profile');
+        const data = await res.json();
+        currentUser = data.user;
+
+        if (data.user) {
+          document.getElementById('header-xp').innerText = data.user.xp;
+          document.getElementById('header-streak').innerText = data.user.streak;
+          
+          const heartsDisplay = document.getElementById('header-hearts');
+          const heartIcon = document.getElementById('heart-icon');
+          const headerPlan = document.getElementById('header-plan');
+          const profilePlanBadge = document.getElementById('profile-plan-badge');
+          const planModeLabel = document.getElementById('plan-mode-label');
+          const togglePlanBtnText = document.getElementById('toggle-plan-btn-text');
+          const mapAdBanner = document.getElementById('map-ad-banner');
+          const quizAdBanner = document.getElementById('quiz-ad-banner');
+          const quizAdShortcut = document.getElementById('quiz-ad-shortcut');
+
+          if (data.user.isPremium) {
+            heartsDisplay.innerText = '∞';
+            heartIcon.className = 'w-4 h-4 text-amber-400 fill-amber-400 animate-pulse';
+            headerPlan.innerText = 'VIP';
+            profilePlanBadge.innerText = '👑 Plano VIP (Sem Anúncios)';
+            profilePlanBadge.className = 'bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded-md';
+            planModeLabel.innerText = 'VIP ATIVO';
+            planModeLabel.className = 'text-[10px] font-black px-2 py-0.5 rounded bg-amber-500 text-slate-950';
+            togglePlanBtnText.innerText = 'Alternar para Plano FREE (Com Anúncios)';
+            if (mapAdBanner) mapAdBanner.classList.add('hidden');
+            if (quizAdBanner) quizAdBanner.classList.add('hidden');
+            if (quizAdShortcut) quizAdShortcut.classList.add('hidden');
+          } else {
+            heartsDisplay.innerText = `${data.user.hearts || 0}/${data.user.maxHearts || 5}`;
+            heartIcon.className = 'w-4 h-4 text-rose-500 fill-rose-500';
+            headerPlan.innerText = 'FREE';
+            profilePlanBadge.innerText = 'Plano Free';
+            profilePlanBadge.className = 'bg-slate-700 text-slate-300 border border-slate-600 text-[10px] font-black px-2 py-0.5 rounded-md';
+            planModeLabel.innerText = 'FREE';
+            planModeLabel.className = 'text-[10px] font-black px-2 py-0.5 rounded bg-slate-700 text-slate-300';
+            togglePlanBtnText.innerText = 'Alternar para Plano VIP (Vidas Infinitas)';
+            if (mapAdBanner) mapAdBanner.classList.remove('hidden');
+            if (quizAdBanner) quizAdBanner.classList.remove('hidden');
+            if (quizAdShortcut) quizAdShortcut.classList.remove('hidden');
+          }
+        }
+
+        if (data.edital) {
+          renderEditalData(data.edital);
+        }
+
+        if (data.apiKeyConfigured) {
+          document.getElementById('gemini-status-dot').className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+          document.getElementById('gemini-status-text').innerText = 'Gemini ON';
+          document.getElementById('gemini-key-input').placeholder = data.apiKeyMasked || 'Chave Ativa';
+        } else {
+          document.getElementById('gemini-status-dot').className = 'w-2 h-2 rounded-full bg-slate-500';
+          document.getElementById('gemini-status-text').innerText = 'Gemini IA';
+        }
+      } catch (e) {}
+    }
+
+    function renderEditalData(edital) {
+      document.getElementById('banner-contest-title').innerText = edital.concurso;
+      document.getElementById('banner-contest-banca').innerText = `Banca: ${edital.banca} • Metodologia Adaptada ao Edital`;
+      document.getElementById('edital-area-badge').innerText = edital.area;
+      document.getElementById('edital-strategy-text').innerText = edital.estrategia;
+
+      const weightsList = document.getElementById('edital-weights-list');
+      weightsList.innerHTML = '';
+      (edital.materiasPesos || []).forEach(m => {
+        const pill = document.createElement('span');
+        pill.className = 'text-[10px] font-bold px-2 py-0.5 rounded-lg border shrink-0 bg-slate-800/80 text-slate-200 border-slate-700';
+        pill.innerHTML = `<strong>${m.materia}</strong>: ${m.peso}`;
+        weightsList.appendChild(pill);
+      });
+    }
+
+    async function selectQuickContest(contestName, targetArea) {
+      playAudio('tap');
+      const res = await fetch('/api/edital/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contestName, targetArea })
+      });
+      const data = await res.json();
+      renderEditalData(data.analysis);
+      renderStages(data.newStages);
+      closeModal('edital-modal');
+      playAudio('level_up');
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+      await fetchQuestions();
+    }
+
+    async function handleCustomEditalSubmit() {
+      const name = document.getElementById('custom-contest-name').value.trim() || 'Concurso Personalizado';
+      const fileInput = document.getElementById('custom-edital-file');
+      
+      if (!fileInput.files || fileInput.files.length === 0) {
+        await selectQuickContest(name, 'Geral / Concurso');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const btn = document.querySelector('#edital-modal button.btn-3d-blue');
+      const originalText = btn ? btn.innerHTML : '';
+      if (btn) btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> <span>ANALISANDO EDITAL POR IA...</span>';
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/knowledge/upload-pdf', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/pdf',
+            'x-filename': encodeURIComponent(file.name),
+            'x-subject': encodeURIComponent(name),
+            'x-is-edital': 'true'
+          },
+          body: file
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          if (data.analysis) renderEditalData(data.analysis);
+          if (data.newStages) renderStages(data.newStages);
+          closeModal('edital-modal');
+          playAudio('level_up');
+          confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+          alert(`Edital "${file.name}" analisado e indexado com sucesso! A trilha e questões foram adaptadas.`);
+          await fetchDocuments();
+          await fetchQuestions();
+        } else {
+          alert('Erro ao processar edital: ' + (data.error || 'Tente novamente.'));
+        }
+      } catch (err) {
+        alert('Erro ao enviar edital: ' + err.message);
+      } finally {
+        if (btn) btn.innerHTML = originalText;
+        lucide.createIcons();
+      }
+    }
+
+    async function fetchStages() {
+      try {
+        const res = await fetch('/api/stages');
+        const data = await res.json();
+        stagesData = data.stages || [];
+        renderStages(stagesData);
+        updateActiveStageProgress();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderStages(stages) {
+      stagesData = stages;
+      const container = document.getElementById('stages-container');
+      container.innerHTML = '<div class="absolute top-4 bottom-4 w-2.5 bg-slate-800 rounded-full z-0"></div>';
+
+      stages.forEach((stage, index) => {
+        const xOffset = index % 2 === 0 ? '-translate-x-6' : 'translate-x-6';
+        const node = document.createElement('div');
+        node.className = `flex flex-col items-center z-10 ${xOffset}`;
+
+        let btnBg = 'bg-slate-800 border-slate-700 opacity-60';
+        let badge = '<span class="text-xs">🔒</span>';
+
+        if (stage.completed) {
+          btnBg = 'bg-amber-500 border-amber-300 shadow-[0_6px_0_#B45309] text-slate-950';
+          badge = '<span class="bg-amber-700 px-2 py-0.5 rounded-full text-[10px] font-black text-white">⭐ 100%</span>';
+        } else if (stage.unlocked) {
+          btnBg = 'bg-emerald-500 border-emerald-300 shadow-[0_6px_0_#059669] animate-pulse text-white';
+          const prog = stage.currentProgress || 0;
+          const req = stage.requiredCorrect || 3;
+          badge = `<span class="bg-emerald-700 px-2 py-0.5 rounded-full text-[10px] font-black text-white">${prog}/${req}</span>`;
+        }
+
+        node.innerHTML = `
+          <div class="relative cursor-pointer" onclick="startStage(${stage.id}, '${stage.subject}')">
+            <div class="w-20 h-20 rounded-full border-4 ${btnBg} flex flex-col items-center justify-center transition-all hover:scale-105 active:translate-y-1">
+              <span class="text-2xl mb-0.5">${stage.icon}</span>
+              ${badge}
+            </div>
+            <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-slate-800 border border-slate-700 px-2.5 py-0.5 rounded-xl text-center shadow-md">
+              <p class="text-[10px] font-black text-slate-200">${stage.title}</p>
+            </div>
+          </div>
+        `;
+        container.appendChild(node);
+      });
+      lucide.createIcons();
+    }
+
+    function startStage(stageId, subject) {
+      playAudio('tap');
+      activeStage = stagesData.find(s => s.id === stageId) || stagesData[0];
+      document.getElementById('subject-filter').value = subject || 'all';
+      updateActiveStageProgress();
+      fetchQuestions(subject);
+      switchTab('quiz');
+    }
+
+    function updateActiveStageProgress() {
+      if (!activeStage) {
+        activeStage = stagesData.find(s => s.unlocked && !s.completed) || stagesData[0];
+      }
+      if (!activeStage) return;
+
+      document.getElementById('quiz-stage-icon').innerText = activeStage.icon || '🎯';
+      document.getElementById('quiz-stage-name').innerText = `Fase ${activeStage.id}: ${activeStage.title}`;
+      const current = activeStage.currentProgress || 0;
+      const req = activeStage.requiredCorrect || 3;
+      document.getElementById('quiz-stage-counter').innerText = `${current}/${req} Acertos`;
+
+      const pct = Math.min(100, Math.round((current / req) * 100));
+      document.getElementById('quiz-stage-bar').style.width = `${pct}%`;
+    }
+
+    function filterQuestionsBySubject() {
+      const sub = document.getElementById('subject-filter').value;
+      fetchQuestions(sub);
+    }
+
+    async function fetchQuestions(subject) {
+      try {
+        const url = subject && subject !== 'all' ? `/api/questions?subject=${encodeURIComponent(subject)}` : '/api/questions';
+        const res = await fetch(url);
+        const data = await res.json();
+        questionsData = data.questions;
+        currentQuestionIndex = 0;
+        renderCurrentQuestion();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function generateNewAiQuestion() {
+      playAudio('tap');
+      const sub = document.getElementById('subject-filter').value;
+      const res = await fetch('/api/questions/generate-ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject: sub !== 'all' ? sub : 'Legislação de Assistência Social' })
+      });
+      const data = await res.json();
+      if (data.question) {
+        questionsData.unshift(data.question);
+        currentQuestionIndex = 0;
+        renderCurrentQuestion();
+        playAudio('correct');
+        confetti({ particleCount: 30, spread: 50, origin: { y: 0.5 } });
+      }
+    }
+
+    function renderCurrentQuestion() {
+      const q = questionsData[currentQuestionIndex] || questionsData[0];
+      if (!q) return;
+
+      document.getElementById('quiz-banca').innerText = q.banca || 'IBFC / CEBRASPE';
+      document.getElementById('quiz-subject').innerText = q.subject;
+      document.getElementById('quiz-statement').innerText = q.statement;
+
+      const typeBadge = document.getElementById('quiz-type-badge');
+      const isCebraspe = q.type === 'certo_errado' || q.options.length === 2;
+      typeBadge.innerText = isCebraspe ? 'Certo / Errado' : 'Múltipla Escolha';
+
+      const optContainer = document.getElementById('quiz-options');
+      optContainer.innerHTML = '';
+
+      if (isCebraspe) {
+        const cebraspeWrapper = document.createElement('div');
+        cebraspeWrapper.className = 'grid grid-cols-2 gap-3 pt-2';
+
+        q.options.forEach(opt => {
+          const isCerto = opt.text.toUpperCase().includes('CERTO');
+          const btn = document.createElement('button');
+          btn.id = `opt-${opt.id}`;
+          btn.className = `p-4 rounded-2xl border-2 border-slate-700 bg-slate-800/90 text-slate-100 font-black text-sm flex items-center justify-center gap-2 transition-all active:translate-y-0.5 shadow-sm hover:border-slate-500`;
+          btn.onclick = () => selectOption(opt.id);
+          btn.innerHTML = `
+            <span class="w-6 h-6 rounded-full ${isCerto ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'} flex items-center justify-center text-xs font-black">
+              ${isCerto ? '✓' : '✗'}
+            </span>
+            <span>${opt.text}</span>
+          `;
+          cebraspeWrapper.appendChild(btn);
+        });
+        optContainer.appendChild(cebraspeWrapper);
+      } else {
+        q.options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.id = `opt-${opt.id}`;
+          btn.className = `w-full text-left p-4 rounded-2xl border-2 border-slate-700 bg-slate-800/90 hover:border-slate-600 text-slate-100 transition-all flex items-start gap-3 active:translate-y-0.5 shadow-sm`;
+          btn.onclick = () => selectOption(opt.id);
+          btn.innerHTML = `
+            <div id="badge-${opt.id}" class="w-7 h-7 rounded-xl bg-slate-700 text-slate-300 flex items-center justify-center font-black text-xs shrink-0 border border-slate-600">
+              ${opt.label}
+            </div>
+            <span class="text-xs font-semibold leading-normal pt-1 text-slate-200">${opt.text}</span>
+          `;
+          optContainer.appendChild(btn);
+        });
+      }
+
+      document.getElementById('quiz-explanation-box').classList.add('hidden');
+      document.getElementById('quiz-action-btn').innerText = 'VERIFICAR RESPOSTA';
+      document.getElementById('quiz-action-btn').className = 'w-full py-4 rounded-2xl font-extrabold text-sm btn-3d-green text-white mt-4 tracking-wide shadow-md';
+      selectedOptionId = null;
+      hasAnswered = false;
+      lucide.createIcons();
+    }
+
+    function selectOption(optId) {
+      if (hasAnswered) return;
+      playAudio('tap');
+      selectedOptionId = optId;
+
+      const q = questionsData[currentQuestionIndex] || questionsData[0];
+      q.options.forEach(o => {
+        const btn = document.getElementById(`opt-${o.id}`);
+        const badge = document.getElementById(`badge-${o.id}`);
+        if (o.id === optId) {
+          btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-indigo-500 bg-indigo-950/60 text-indigo-100 flex items-start gap-3 shadow-[0_3px_0_#4338CA]';
+          if (badge) badge.className = 'w-7 h-7 rounded-xl bg-indigo-500 text-white flex items-center justify-center font-black text-xs shrink-0 border-0';
+        } else {
+          btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-slate-700 bg-slate-800/90 text-slate-100 flex items-start gap-3 shadow-sm';
+          if (badge) badge.className = 'w-7 h-7 rounded-xl bg-slate-700 text-slate-300 flex items-center justify-center font-black text-xs shrink-0 border border-slate-600';
+        }
+      });
+    }
+
+    async function handleQuizAction() {
+      if (!hasAnswered) {
+        // Verifica se tem vidas (no plano Free)
+        if (currentUser && !currentUser.isPremium && currentUser.hearts <= 0) {
+          playAudio('wrong');
+          openModal('no-hearts-modal');
+          return;
+        }
+
+        if (!selectedOptionId) {
+          alert('Selecione uma alternativa antes de verificar.');
+          return;
+        }
+
+        const q = questionsData[currentQuestionIndex] || questionsData[0];
+        const res = await fetch('/api/questions/answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            questionId: q.id,
+            selectedOptionId,
+            stageId: activeStage ? activeStage.id : null
+          })
+        });
+        const result = await res.json();
+        currentUser = result.user;
+
+        hasAnswered = true;
+        const box = document.getElementById('quiz-explanation-box');
+        const badge = document.getElementById('quiz-status-badge');
+        const text = document.getElementById('quiz-explanation-text');
+        const legal = document.getElementById('quiz-legal-basis');
+
+        box.classList.remove('hidden');
+
+        if (result.isCorrect) {
+          playAudio('correct');
+          confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 } });
+          box.className = 'p-4 rounded-2xl border bg-emerald-950/50 border-emerald-500/50 space-y-3 card-shadow';
+          badge.innerHTML = '<i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i> <span class="text-emerald-300 font-black">Resposta Correta! (+15 XP)</span>';
+          document.getElementById('header-xp').innerText = result.user.xp;
+
+          // Atualiza progresso da fase
+          if (result.stageProgress) {
+            const sp = result.stageProgress;
+            const pct = Math.min(100, Math.round((sp.currentProgress / sp.requiredCorrect) * 100));
+            document.getElementById('quiz-stage-bar').style.width = `${pct}%`;
+            document.getElementById('quiz-stage-counter').innerText = `${sp.currentProgress}/${sp.requiredCorrect} Acertos`;
+
+            if (sp.justCompleted) {
+              // 🏆 ANIMAÇÃO DE LEVEL UP / FASE CONCLUÍDA!
+              setTimeout(() => {
+                showStageCompletionModal(sp);
+              }, 600);
+            }
+          }
+        } else {
+          playAudio('wrong');
+          box.className = 'p-4 rounded-2xl border bg-rose-950/50 border-rose-500/50 space-y-3 card-shadow';
+          badge.innerHTML = '<i data-lucide="x-circle" class="w-5 h-5 text-rose-400"></i> <span class="text-rose-300 font-black">Resposta Incorreta (-1 Coração)</span>';
+          
+          if (result.user.isPremium) {
+            document.getElementById('header-hearts').innerText = '∞';
+          } else {
+            document.getElementById('header-hearts').innerText = `${result.user.hearts}/5`;
+            if (result.user.hearts <= 0) {
+              setTimeout(() => openModal('no-hearts-modal'), 1000);
+            }
+          }
+        }
+
+        text.innerText = result.explanation.whyCorrect;
+        legal.innerText = result.explanation.legalBasis;
+
+        document.getElementById('quiz-action-btn').innerText = 'PRÓXIMA QUESTÃO';
+        document.getElementById('quiz-action-btn').className = 'w-full py-4 rounded-2xl font-extrabold text-sm btn-3d-blue text-white mt-4 tracking-wide shadow-md';
+        lucide.createIcons();
+      } else {
+        playAudio('tap');
+        currentQuestionIndex = (currentQuestionIndex + 1) % questionsData.length;
+        renderCurrentQuestion();
+      }
+    }
+
+    function showStageCompletionModal(stageInfo) {
+      playAudio('level_up');
+      confetti({ particleCount: 120, spread: 90, origin: { y: 0.5 } });
+      document.getElementById('stage-completed-title').innerText = stageInfo.stageTitle;
+      openModal('stage-completed-modal');
+      fetchStages(); // Atualiza a árvore da trilha
+    }
+
+    function advanceToNextStage() {
+      closeModal('stage-completed-modal');
+      const next = stagesData.find(s => s.unlocked && !s.completed);
+      if (next) {
+        startStage(next.id, next.subject);
+      } else {
+        switchTab('map');
+      }
+    }
+
+    async function convertCurrentQuestionToAnki() {
+      const q = questionsData[currentQuestionIndex] || questionsData[0];
+      if (!q) return;
+
+      const btn = document.getElementById('convert-anki-btn');
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> <span>Salvando no Deck...</span>';
+      lucide.createIcons();
+
+      const res = await fetch('/api/questions/convert-to-anki', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          front: `${q.subject} (${q.topic}):\n${q.statement.slice(0, 180)}...`,
+          back: `Gabarito & Fundamento:\n${q.explanation.whyCorrect}\n\nBase Legal:\n${q.explanation.legalBasis}`,
+          subject: q.subject,
+          topic: q.topic
+        })
+      });
+
+      const data = await res.json();
+      playAudio('level_up');
+      confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
+      btn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-300"></i> <span>Adicionado ao Deck Anki!</span>';
+      btn.className = 'w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-sm';
+      lucide.createIcons();
+      await fetchFlashcards();
+    }
+
+    // ==========================================
+    // 🧠 MOTOR ANKI SM-2
+    // ==========================================
+    async function fetchFlashcards() {
+      try {
+        const res = await fetch('/api/anki/cards');
+        const data = await res.json();
+        flashcardsData = data.cards || [];
+        document.getElementById('anki-deck-counter').innerText = `${flashcardsData.length} Cards`;
+        renderCurrentFlashcard();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderCurrentFlashcard() {
+      const card = flashcardsData[currentCardIndex] || flashcardsData[0];
+      if (!card) return;
+
+      document.getElementById('anki-front-text').innerText = card.front;
+      document.getElementById('anki-back-text').innerText = card.back;
+      document.getElementById('anki-subject-badge').innerText = card.subject || 'SEDES DF';
+      document.getElementById('anki-interval').innerText = `${card.interval || 1} dias`;
+      document.getElementById('anki-ease').innerText = (card.easeFactor || 2.5).toFixed(2);
+      document.getElementById('anki-reps').innerText = card.repetitions || 0;
+
+      const inner = document.getElementById('anki-card-inner');
+      isFlipped = false;
+      inner.classList.remove('is-flipped');
+    }
+
+    function flipFlashcard() {
+      playAudio('flip');
+      const inner = document.getElementById('anki-card-inner');
+      isFlipped = !isFlipped;
+      if (isFlipped) inner.classList.add('is-flipped');
+      else inner.classList.remove('is-flipped');
+    }
+
+    async function reviewCard(quality) {
+      const card = flashcardsData[currentCardIndex] || flashcardsData[0];
+      if (!card) return;
+
+      if (quality >= 4) playAudio('correct');
+      else if (quality >= 3) playAudio('tap');
+      else playAudio('wrong');
+
+      await fetch('/api/anki/review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cardId: card.id, quality })
+      });
+
+      document.getElementById('header-xp').innerText = parseInt(document.getElementById('header-xp').innerText) + 5;
+      currentCardIndex = (currentCardIndex + 1) % flashcardsData.length;
+      await fetchFlashcards();
+    }
+
+    async function handleCreateManualCard() {
+      const front = document.getElementById('new-card-front').value.trim();
+      const back = document.getElementById('new-card-back').value.trim();
+      const subject = document.getElementById('new-card-subject').value.trim();
+      const topic = document.getElementById('new-card-topic').value.trim();
+
+      if (!front || !back) {
+        alert('Preencha a frente e o verso do flashcard.');
+        return;
+      }
+
+      await fetch('/api/anki/cards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ front, back, subject, topic })
+      });
+
+      playAudio('level_up');
+      confetti({ particleCount: 40, spread: 60, origin: { y: 0.6 } });
+      closeModal('new-card-modal');
+      document.getElementById('new-card-front').value = '';
+      document.getElementById('new-card-back').value = '';
+      await fetchFlashcards();
+    }
+
+    // ==========================================
+    // 📦 UPLOAD E RAG DE PDFS
+    // ==========================================
+    async function handleRealPdfUpload() {
+      const fileInput = document.getElementById('pdf-file-input');
+      const subjectInput = document.getElementById('pdf-subject-input');
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Selecione um arquivo PDF para compactar.');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const subject = subjectInput.value || 'Assistência Social / SEDES DF';
+      const btnText = document.getElementById('pdf-upload-btn-text');
+      btnText.innerText = 'COMPACTANDO & INDEXANDO...';
+
+      try {
+        const res = await fetch('/api/knowledge/upload-pdf', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/pdf',
+            'x-filename': encodeURIComponent(file.name),
+            'x-subject': encodeURIComponent(subject)
+          },
+          body: file
+        });
+
+        const data = await res.json();
+        playAudio('level_up');
+        confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+        alert(data.message || 'PDF compactado e indexado com sucesso!');
+        await fetchDocuments();
+        await fetchQuestions();
+        closeModal('pdf-modal');
+      } catch (err) {
+        alert('Erro no upload: ' + err.message);
+      } finally {
+        btnText.innerText = 'COMPACTAR & ALIMENTAR RAG';
+      }
+    }
+
+    async function fetchDocuments() {
+      try {
+        const res = await fetch('/api/knowledge/documents');
+        const data = await res.json();
+        renderDocuments(data.documents);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderDocuments(docs) {
+      const container = document.getElementById('docs-list');
+      if (!container) return;
+      container.innerHTML = '';
+      docs.forEach(doc => {
+        const item = document.createElement('div');
+        item.className = 'bg-slate-800 border border-slate-700 rounded-xl p-3 flex items-center justify-between text-xs card-shadow';
+        item.innerHTML = `
+          <div>
+            <p class="font-bold text-slate-100 truncate max-w-[200px]">${doc.filename}</p>
+            <p class="text-[10px] text-slate-400">${doc.originalSize} ➔ ${doc.compressedSize} (${doc.totalChunks} chunks)</p>
+          </div>
+          <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-500/30">-${doc.reduction}</span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // ==========================================
+    // 🧭 ABAS & NAVEGAÇÃO
+    // ==========================================
+    function switchTab(tab) {
+      playAudio('tap');
+      currentTab = tab;
+      ['map', 'quiz', 'anki', 'stats'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        document.getElementById(`nav-${t}`).className = 'flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold';
+      });
+
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      document.getElementById(`nav-${tab}`).className = 'flex flex-col items-center gap-1 text-emerald-400 transition-all font-black';
+      lucide.createIcons();
+    }
+
+    function openModal(id) {
+      playAudio('tap');
+      document.getElementById(id).classList.remove('hidden');
+      document.getElementById(id).classList.add('flex');
+    }
+    function closeModal(id) {
+      playAudio('tap');
+      document.getElementById(id).classList.add('hidden');
+      document.getElementById(id).classList.remove('flex');
+    }
+
+    async function simulatePixPayment() {
+      playAudio('level_up');
+      const res = await fetch('/api/billing/confirm-pix', { method: 'POST' });
+      const data = await res.json();
+      confetti({ particleCount: 80, spread: 80, origin: { y: 0.5 } });
+      alert('Pagamento PIX de R$ 29,99 confirmado! Assinatura VIP liberada com vidas infinitas e ZERO anúncios.');
+      closeModal('paywall-modal');
+      await fetchUserProfile();
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
