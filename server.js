@@ -577,17 +577,37 @@ Gere um diagnóstico pedagógico completo em formato JSON estrito:
 // 🤖 MOTOR IA: GERAÇÃO INFINITA DE QUESTÕES
 // ==========================================
 async function generateAiQuestion(subject, topic, format = 'auto') {
-  let candidates = state.knowledgeChunks;
-  if (subject && subject !== 'all') {
-    candidates = candidates.filter(c => c.subject.toLowerCase().includes(subject.toLowerCase()));
-  }
-  if (candidates.length === 0) candidates = state.knowledgeChunks;
+  // Filtra apenas chunks com texto legível e relevante (ignora streams corrompidos de PDF)
+  let cleanChunks = (state.knowledgeChunks || []).filter(c => 
+    c.content && 
+    c.content.length > 60 && 
+    !c.content.includes('ET Q q') && 
+    !c.content.includes('0.000008872')
+  );
+  if (cleanChunks.length === 0) cleanChunks = state.knowledgeChunks;
 
-  const randomChunk = candidates[Math.floor(Math.random() * candidates.length)];
+  let candidates = cleanChunks;
+  if (subject && subject !== 'all') {
+    const subLower = subject.toLowerCase();
+    const filtered = cleanChunks.filter(c => 
+      c.subject.toLowerCase().includes(subLower) || 
+      (c.topic && c.topic.toLowerCase().includes(subLower)) ||
+      (c.content && c.content.toLowerCase().includes(subLower))
+    );
+    if (filtered.length > 0) candidates = filtered;
+  }
+
+  const randomChunk = candidates[Math.floor(Math.random() * candidates.length)] || {
+    content: "A assistência social é direito do cidadão e dever do Estado, política de Seguridade Social não contributiva que provê os mínimos sociais.",
+    articleRef: "Lei 8.742/1993 (LOAS)",
+    subject: subject || "Legislação de Assistência Social",
+    topic: "Princípios e Diretrizes"
+  };
+
   const contextText = randomChunk.content;
   const legalRef = randomChunk.articleRef || 'Legislação Aplicável';
-  const targetSubject = randomChunk.subject;
-  const targetTopic = randomChunk.topic || topic || 'Conceitos Fundamentais';
+  const targetSubject = randomChunk.subject || subject || 'Conhecimentos Específicos';
+  const targetTopic = randomChunk.topic || topic || 'Normas e Doutrina';
   const currentBanca = state.currentEditalAnalysis?.banca || 'IBFC / CEBRASPE';
   const isCebraspeMode = currentBanca.toUpperCase().includes('CEBRASPE') || format === 'certo_errado';
 
@@ -595,10 +615,10 @@ async function generateAiQuestion(subject, topic, format = 'auto') {
   if (state.apiKey && state.apiKey.length > 10) {
     try {
       const typePrompt = isCebraspeMode
-        ? `Gere a questão no modelo CERTO ou ERRADO (Estilo CEBRASPE/CESPE) com exatamente 2 opções: opt_certo (CERTO) e opt_errado (ERRADO).`
-        : `Gere a questão no modelo MÚLTIPLA ESCOLHA (4 alternativas: A, B, C, D).`;
+        ? `Gere no modelo CERTO ou ERRADO (Estilo CEBRASPE). Escolha aleatoriamente se a assertiva será CERTA (correctOptionId: "opt_certo") ou ERRADA (correctOptionId: "opt_errado" com pegadinha sutil de inversão de prazos/competências/conceitos).`
+        : `Gere no modelo MÚLTIPLA ESCOLHA (4 alternativas: A, B, C, D). Distribua ALEATORIAMENTE a alternativa correta entre opt_a, opt_b, opt_c ou opt_d (NÃO coloque sempre na A).`;
 
-      const prompt = `Você é a banca examinadora ${currentBanca} para o concurso ${state.currentEditalAnalysis?.concurso}.
+      const prompt = `Você é a banca examinadora ${currentBanca} para o concurso ${state.currentEditalAnalysis?.concurso || 'SEDES/DF'}.
 ${typePrompt}
 Gere 1 questão inédita de concurso de alto nível baseada ESTRITAMENTE neste trecho da lei/doutrina:
 "${contextText}"
@@ -606,22 +626,22 @@ Gere 1 questão inédita de concurso de alto nível baseada ESTRITAMENTE neste t
 Matéria: ${targetSubject}
 Referência de Lei Seca: ${legalRef}
 
-Responda EXCLUSIVAMENTE em formato JSON com a estrutura:
+Responda EXCLUSIVAMENTE em formato JSON com a seguinte estrutura:
 {
   "banca": "${currentBanca}",
   "subject": "${targetSubject}",
   "topic": "${targetTopic}",
   "type": "${isCebraspeMode ? 'certo_errado' : 'multipla_escolha'}",
-  "statement": "Enunciado claro, contextualizado e focado na pegadinha da banca...",
+  "statement": "Enunciado contextualizado com situação prática ou assertiva de prova...",
   "options": [
     ${isCebraspeMode 
       ? `{"id": "opt_certo", "label": "C", "text": "CERTO"}, {"id": "opt_errado", "label": "E", "text": "ERRADO"}`
-      : `{"id": "opt_a", "label": "A", "text": "Alternativa correta com precisão terminológica"}, {"id": "opt_b", "label": "B", "text": "Alternativa incorreta com pegadinha sutil"}, {"id": "opt_c", "label": "C", "text": "Alternativa incorreta contrariando a lei"}, {"id": "opt_d", "label": "D", "text": "Alternativa incorreta com inversão de conceitos"}`
+      : `{"id": "opt_a", "label": "A", "text": "Texto da assertiva A"}, {"id": "opt_b", "label": "B", "text": "Texto da assertiva B"}, {"id": "opt_c", "label": "C", "text": "Texto da assertiva C"}, {"id": "opt_d", "label": "D", "text": "Texto da assertiva D"}`
     }
   ],
-  "correctOptionId": "${isCebraspeMode ? 'opt_certo' : 'opt_a'}",
+  "correctOptionId": "${isCebraspeMode ? 'opt_certo ou opt_errado' : 'opt_a ou opt_b ou opt_c ou opt_d'}",
   "explanation": {
-    "whyCorrect": "Explicação didática detalhada fundamentando o gabarito e apontando o erro das demais assertivas citando ${legalRef}.",
+    "whyCorrect": "Justificativa minuciosa do gabarito explicando o fundamento de acordo com ${legalRef} e apontando o erro das demais alternativas.",
     "legalBasis": "${legalRef}"
   }
 }`;
@@ -642,7 +662,7 @@ Responda EXCLUSIVAMENTE em formato JSON com a estrutura:
         if (rawJson) {
           const parsed = JSON.parse(rawJson);
           return {
-            id: 'q-gemini-' + Date.now(),
+            id: 'q-gemini-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
             ...parsed
           };
         }
@@ -653,26 +673,53 @@ Responda EXCLUSIVAMENTE em formato JSON com a estrutura:
   }
 
   // Fallback Inteligente baseado em RAG
-  const qId = 'q-rag-' + Date.now();
+  const qId = 'q-rag-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
   if (isCebraspeMode) {
+    const isCerto = Math.random() < 0.5;
     return {
       id: qId,
       banca: currentBanca,
       type: 'certo_errado',
       subject: targetSubject,
       topic: targetTopic,
-      statement: `(Banca ${currentBanca} • Concurso: ${state.currentEditalAnalysis.concurso})\nJulgue o item subsequente à luz de ${legalRef}:\n\n"Em consonância com as diretrizes aplicáveis à política social e normativa, ${contextText.slice(0, 200)}..."`,
+      statement: isCerto
+        ? `(Banca ${currentBanca} • ${state.currentEditalAnalysis?.concurso || 'SEDES/DF'})\nJulgue o item a seguir com base em ${legalRef}:\n\n"Em consonância com as diretrizes aplicáveis à política social e normativa, ${contextText.slice(0, 190)}..."`
+        : `(Banca ${currentBanca} • ${state.currentEditalAnalysis?.concurso || 'SEDES/DF'})\nJulgue o item a seguir com base em ${legalRef}:\n\n"No tocante a ${targetTopic}, a concessão dos benefícios independe de regulamentação legal ou critérios de renda, cabendo exclusivamente ao gestor a supressão unilateral de garantias."`,
       options: [
         { id: 'opt_certo', label: 'C', text: 'CERTO' },
         { id: 'opt_errado', label: 'E', text: 'ERRADO' }
       ],
-      correctOptionId: 'opt_certo',
+      correctOptionId: isCerto ? 'opt_certo' : 'opt_errado',
       explanation: {
-        whyCorrect: `GABARITO: CERTO. A assertiva reflete fidedignamente o dispositivo legal constante de ${legalRef}: "${contextText.slice(0, 220)}...".`,
+        whyCorrect: isCerto
+          ? `GABARITO: CERTO. A assertiva reproduz fielmente a literalidade e o preceito de ${legalRef}: "${contextText.slice(0, 200)}...".`
+          : `GABARITO: ERRADO. A assertiva contraria a norma expressa em ${legalRef}. Os critérios e garantias decorrem de previsão legal vinculada, não de arbítrio desregulamentado.`,
         legalBasis: `${legalRef} • Programa Oficial do Concurso.`
       }
     };
   }
+
+  // Múltipla Escolha com alternativas e gabarito embaralhados
+  const rawPool = [
+    { text: `Conforme estabelece expressamente o ${legalRef}: ${contextText.slice(0, 150)}...`, isCorrect: true },
+    { text: `A eficácia dos princípios de ${targetTopic} fica estritamente condicionada à discricionariedade prévia sem previsão legal.`, isCorrect: false },
+    { text: `São expressamente vedadas as ações integradas e participativas da sociedade no âmbito de ${targetSubject}.`, isCorrect: false },
+    { text: `Os direitos fundamentais e garantias de ${targetTopic} admitem supressão temporária pelo Executivo local sem base jurídica.`, isCorrect: false }
+  ];
+
+  const shuffledPool = rawPool.sort(() => Math.random() - 0.5);
+  const letters = ['A', 'B', 'C', 'D'];
+  let determinedCorrectId = 'opt_a';
+
+  const options = shuffledPool.map((item, idx) => {
+    const optId = `opt_${letters[idx].toLowerCase()}`;
+    if (item.isCorrect) determinedCorrectId = optId;
+    return {
+      id: optId,
+      label: letters[idx],
+      text: item.text
+    };
+  });
 
   return {
     id: qId,
@@ -680,32 +727,11 @@ Responda EXCLUSIVAMENTE em formato JSON com a estrutura:
     type: 'multipla_escolha',
     subject: targetSubject,
     topic: targetTopic,
-    statement: `(Concurso: ${state.currentEditalAnalysis.concurso} • Banca: ${currentBanca})\nConsiderando as normas vigentes em ${targetSubject} e o preceituado expressamente em ${legalRef}, assinale a opção correta:`,
-    options: [
-      {
-        id: 'opt_a',
-        label: 'A',
-        text: `Conforme estabelece expressamente o ${legalRef}: ${contextText.slice(0, 160)}...`
-      },
-      {
-        id: 'opt_b',
-        label: 'B',
-        text: `A eficácia dos princípios de ${targetTopic} fica condicionada à discricionariedade prévia sem previsão legal.`
-      },
-      {
-        id: 'opt_c',
-        label: 'C',
-        text: `São vedadas as ações integradas e participativas no âmbito de ${targetSubject}.`
-      },
-      {
-        id: 'opt_d',
-        label: 'D',
-        text: `Os direitos fundamentais e garantias de ${targetTopic} admitem supressão temporária sem controle judicial.`
-      }
-    ],
-    correctOptionId: 'opt_a',
+    statement: `(Concurso: ${state.currentEditalAnalysis?.concurso || 'SEDES/DF'} • Banca: ${currentBanca})\nConsiderando as normas vigentes em ${targetSubject} e o preceituado expressamente em ${legalRef}, assinale a opção correta:`,
+    options,
+    correctOptionId: determinedCorrectId,
     explanation: {
-      whyCorrect: `GABARITO: Item A. A alternativa A reflete com fidelidade a literalidade de ${legalRef}. Os demais itens apresentam distorções jurídicas e conceituais contrárias à jurisprudência e à lei.`,
+      whyCorrect: `GABARITO: Item ${determinedCorrectId.replace('opt_', '').toUpperCase()}. A alternativa correta reflete a literalidade e a lógica jurídica de ${legalRef}. Os demais itens apresentam distorções jurídicas e violação da lei.`,
       legalBasis: `${legalRef} • Edital do Concurso.`
     }
   };
@@ -917,18 +943,29 @@ const server = http.createServer(async (req, res) => {
   // 4. QUESTÕES & IA INFINITA
   if (url.pathname === '/api/questions') {
     const subject = url.searchParams.get('subject');
-    let qList = state.questions;
+    let qList = state.questions || [];
     if (subject && subject !== 'all') {
-      qList = state.questions.filter(q => q.subject.toLowerCase().includes(subject.toLowerCase()));
+      const subLower = subject.toLowerCase();
+      qList = state.questions.filter(q => 
+        (q.subject && q.subject.toLowerCase().includes(subLower)) ||
+        (q.topic && q.topic.toLowerCase().includes(subLower)) ||
+        (q.statement && q.statement.toLowerCase().includes(subLower))
+      );
     }
-    if (qList.length === 0) {
-      const newQ = await generateAiQuestion(subject || 'Legislação de Assistência Social');
-      state.questions.unshift(newQ);
+    // Garante que haja pelo menos 5 questões variadas para o tema
+    if (qList.length < 5) {
+      const needed = 5 - qList.length;
+      for (let i = 0; i < needed; i++) {
+        const newQ = await generateAiQuestion(subject || 'Legislação de Assistência Social');
+        state.questions.unshift(newQ);
+        qList.unshift(newQ);
+      }
       saveStateToDisk();
-      qList = [newQ];
     }
+    // Embaralha as questões para que o estudante sempre veja uma sequência dinâmica
+    const shuffledList = [...qList].sort(() => Math.random() - 0.5);
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ questions: qList }));
+    res.end(JSON.stringify({ questions: shuffledList }));
     return;
   }
 
