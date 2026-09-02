@@ -76,7 +76,7 @@ export const App: React.FC = () => {
       )}
 
       {/* Conteúdo Principal */}
-      <main className="flex-1">
+      <main className="flex-1 overflow-x-hidden">
         {inQuizMode ? (
           <QuizArena
             stage={currentStage}
@@ -91,12 +91,12 @@ export const App: React.FC = () => {
             )}
 
             {activeTab === 'quiz' && (
-              <div className="max-w-md mx-auto px-4 py-4 pb-28">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-black text-white">Banco de Questões</h2>
+              <div className="w-full max-w-md mx-auto px-3.5 sm:px-4 py-4 pb-36">
+                <div className="flex items-center justify-between mb-4 gap-2">
+                  <h2 className="text-base sm:text-lg font-black text-white truncate">Banco de Questões</h2>
                   <button
                     onClick={() => setShowKnowledge(true)}
-                    className="p-2 bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-bold flex items-center gap-1.5"
+                    className="p-2 bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0"
                   >
                     <HardDrive className="w-4 h-4" />
                     <span>Upload PDFs (RAG)</span>
@@ -122,14 +122,14 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Barra de Navegação Inferior (Estilo App Mobile) */}
+      {/* Barra de Navegação Inferior (Estilo App Mobile com Safe Area) */}
       {!inQuizMode && (
-        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 py-2.5 px-6">
-          <div className="max-w-md mx-auto flex items-center justify-between">
+        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 py-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] px-4 sm:px-6">
+          <div className="w-full max-w-md mx-auto flex items-center justify-around">
             <button
               onClick={() => setActiveTab('map')}
-              className={`flex flex-col items-center gap-1 transition-all ${
-                activeTab === 'map' ? 'text-emerald-400 scale-105' : 'text-slate-400 hover:text-slate-200'
+              className={`flex flex-col items-center gap-1 transition-all py-1 px-2.5 rounded-xl ${
+                activeTab === 'map' ? 'text-emerald-400 scale-105 font-bold' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Map className="w-5 h-5" />
@@ -138,8 +138,8 @@ export const App: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('quiz')}
-              className={`flex flex-col items-center gap-1 transition-all ${
-                activeTab === 'quiz' ? 'text-emerald-400 scale-105' : 'text-slate-400 hover:text-slate-200'
+              className={`flex flex-col items-center gap-1 transition-all py-1 px-2.5 rounded-xl ${
+                activeTab === 'quiz' ? 'text-emerald-400 scale-105 font-bold' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Layers className="w-5 h-5" />
@@ -148,8 +148,8 @@ export const App: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('anki')}
-              className={`flex flex-col items-center gap-1 transition-all ${
-                activeTab === 'anki' ? 'text-indigo-400 scale-105' : 'text-slate-400 hover:text-slate-200'
+              className={`flex flex-col items-center gap-1 transition-all py-1 px-2.5 rounded-xl ${
+                activeTab === 'anki' ? 'text-indigo-400 scale-105 font-bold' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Brain className="w-5 h-5" />
@@ -158,8 +158,8 @@ export const App: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('stats')}
-              className={`flex flex-col items-center gap-1 transition-all ${
-                activeTab === 'stats' ? 'text-amber-400 scale-105' : 'text-slate-400 hover:text-slate-200'
+              className={`flex flex-col items-center gap-1 transition-all py-1 px-2.5 rounded-xl ${
+                activeTab === 'stats' ? 'text-amber-400 scale-105 font-bold' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <BarChart3 className="w-5 h-5" />

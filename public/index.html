@@ -2,7 +2,7 @@
 <html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>QA - Estude para Concursos | Gamificação Duolingo & Repetição Espaçada Anki SM-2</title>
   
   <!-- PWA & Mobile Web App Meta Tags -->
@@ -62,13 +62,26 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Outfit', 'sans-serif'] }
+          fontFamily: { sans: ['Outfit', 'sans-serif'] },
+          screens: {
+            'xs': '375px'
+          }
         }
       }
     }
   </script>
 
   <style>
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      touch-action: manipulation;
+    }
+
     body {
       -webkit-tap-highlight-color: transparent;
       user-select: none;
@@ -149,6 +162,14 @@
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     }
 
+    /* Custom Mobile Safe Insets */
+    .safe-top-padding {
+      padding-top: max(0.5rem, env(safe-area-inset-top));
+    }
+    .safe-bottom-padding {
+      padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+
     ::-webkit-scrollbar {
       width: 4px;
       height: 4px;
@@ -159,70 +180,74 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex justify-center bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white">
+<body class="min-h-screen w-full flex justify-center bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white overflow-x-hidden">
 
-  <!-- Mobile Container Wrapper -->
-  <div id="app-wrapper" class="w-full max-w-md min-h-screen bg-slate-900 border-x border-slate-800 flex flex-col justify-between shadow-2xl relative">
+  <!-- Mobile Container Wrapper (Responsive auto-fit) -->
+  <div id="app-wrapper" class="w-full max-w-full sm:max-w-md min-h-screen bg-slate-900 border-x-0 sm:border-x border-slate-800 flex flex-col justify-between shadow-2xl relative overflow-x-hidden">
 
-    <!-- Top Header -->
-    <header id="app-header" class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3.5 py-3 flex items-center justify-between shadow-sm">
-      <!-- Streak -->
-      <div class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2 py-1.5 rounded-2xl shadow-sm" title="Ofensiva diária">
-        <i data-lucide="flame" class="w-4 h-4 text-amber-500 fill-amber-500 animate-pulse"></i>
-        <span id="header-streak" class="text-xs font-black text-amber-400">4</span>
+    <!-- Top Header (Fully Responsive on All Mobile Sizes) -->
+    <header id="app-header" class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-2.5 sm:px-3.5 py-2 sm:py-3 safe-top-padding flex items-center justify-between shadow-sm">
+      
+      <!-- Left Stats: Streak & XP -->
+      <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <!-- Streak -->
+        <div class="flex items-center gap-0.5 sm:gap-1 bg-amber-500/10 border border-amber-500/30 px-1.5 sm:px-2 py-1 rounded-xl sm:rounded-2xl shadow-sm" title="Ofensiva diária">
+          <i data-lucide="flame" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 fill-amber-500 animate-pulse"></i>
+          <span id="header-streak" class="text-[11px] sm:text-xs font-black text-amber-400">4</span>
+        </div>
+
+        <!-- XP -->
+        <div class="flex items-center gap-0.5 sm:gap-1 bg-emerald-500/10 border border-emerald-500/30 px-1.5 sm:px-2 py-1 rounded-xl sm:rounded-2xl shadow-sm" title="Experiência total">
+          <i data-lucide="zap" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 fill-emerald-400"></i>
+          <span id="header-xp" class="text-[11px] sm:text-xs font-black text-emerald-400">340</span>
+        </div>
+
+        <!-- Vidas -->
+        <button onclick="handleHeartClick()" id="header-hearts-btn" class="flex items-center gap-0.5 sm:gap-1 bg-rose-500/10 border border-rose-500/30 px-1.5 sm:px-2 py-1 rounded-xl sm:rounded-2xl shadow-sm hover:scale-105 transition-transform" title="Vidas">
+          <i id="heart-icon" data-lucide="heart" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500 fill-rose-500"></i>
+          <span id="header-hearts" class="text-[11px] sm:text-xs font-black text-rose-400">5/5</span>
+        </button>
       </div>
 
-      <!-- XP -->
-      <div class="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 px-2 py-1.5 rounded-2xl shadow-sm" title="Experiência total">
-        <i data-lucide="zap" class="w-4 h-4 text-emerald-400 fill-emerald-400"></i>
-        <span id="header-xp" class="text-xs font-black text-emerald-400">340</span>
-      </div>
+      <!-- Right Controls & VIP Badge -->
+      <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <!-- BOTÃO 📱 TESTAR NO CELULAR (QR CODE & PWA) -->
+        <button onclick="openModal('mobile-app-modal')" class="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 rounded-xl sm:rounded-2xl text-[10px] sm:text-[11px] font-black transition-all shadow-sm active:scale-95" title="Abrir e Instalar no Celular">
+          <i data-lucide="smartphone" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400"></i>
+          <span class="hidden xs:inline">Celular</span>
+        </button>
 
-      <!-- Vidas -->
-      <button onclick="handleHeartClick()" id="header-hearts-btn" class="flex items-center gap-1 bg-rose-500/10 border border-rose-500/30 px-2 py-1.5 rounded-2xl shadow-sm hover:scale-105 transition-transform" title="Vidas">
-        <i id="heart-icon" data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i>
-        <span id="header-hearts" class="text-xs font-black text-rose-400">5/5</span>
-      </button>
-
-      <!-- BOTÃO 📱 TESTAR NO CELULAR (QR CODE & PWA) -->
-      <button onclick="openModal('mobile-app-modal')" class="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 rounded-2xl text-[11px] font-black transition-all shadow-sm active:scale-95" title="Abrir e Instalar no Celular">
-        <i data-lucide="smartphone" class="w-3.5 h-3.5 text-emerald-400"></i>
-        <span>Celular</span>
-      </button>
-
-      <!-- Controls: Som & Tema & VIP Badge -->
-      <div class="flex items-center gap-1">
         <!-- Som -->
-        <button id="sound-btn" onclick="toggleSound()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition-colors" title="Alternar Som">
-          <i id="sound-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <button id="sound-btn" onclick="toggleSound()" class="p-1 sm:p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg sm:rounded-xl border border-slate-700 transition-colors" title="Alternar Som">
+          <i id="sound-icon" data-lucide="volume-2" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400"></i>
         </button>
 
         <!-- Tema Dark/Light -->
-        <button id="theme-btn" onclick="toggleTheme()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition-colors" title="Alternar Tema">
-          <i id="theme-icon" data-lucide="sun" class="w-3.5 h-3.5 text-amber-400"></i>
+        <button id="theme-btn" onclick="toggleTheme()" class="p-1 sm:p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg sm:rounded-xl border border-slate-700 transition-colors" title="Alternar Tema">
+          <i id="theme-icon" data-lucide="sun" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400"></i>
         </button>
 
         <!-- Badge de Assinatura -->
-        <button onclick="openModal('paywall-modal')" id="header-plan-btn" class="flex items-center gap-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-2 py-1.5 rounded-2xl text-[10px] font-black shadow-[0_2px_0_#B45309]">
-          <i data-lucide="crown" class="w-3 h-3 fill-slate-950"></i>
+        <button onclick="openModal('paywall-modal')" id="header-plan-btn" class="flex items-center gap-0.5 sm:gap-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-1.5 sm:px-2 py-1 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black shadow-[0_2px_0_#B45309]">
+          <i data-lucide="crown" class="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-slate-950"></i>
           <span id="header-plan">VIP</span>
         </button>
       </div>
     </header>
 
     <!-- BANNER DE INSTALAÇÃO PWA (QUANDO ACESSADO NO CELULAR) -->
-    <div id="pwa-install-banner" class="hidden bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-4 py-2.5 flex items-center justify-between shadow-md text-xs font-bold">
-      <div class="flex items-center gap-2">
-        <i data-lucide="download-cloud" class="w-4 h-4 text-white"></i>
-        <span>Instalar QA Concursos no celular?</span>
+    <div id="pwa-install-banner" class="hidden bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-3 sm:px-4 py-2 flex items-center justify-between shadow-md text-xs font-bold">
+      <div class="flex items-center gap-2 truncate">
+        <i data-lucide="download-cloud" class="w-4 h-4 text-white shrink-0"></i>
+        <span class="truncate">Instalar QA Concursos no celular?</span>
       </div>
-      <button onclick="installPwaApp()" class="bg-white text-slate-950 px-3 py-1 rounded-xl text-[11px] font-black shadow-sm active:scale-95">
+      <button onclick="installPwaApp()" class="bg-white text-slate-950 px-2.5 py-1 rounded-xl text-[10px] sm:text-[11px] font-black shadow-sm active:scale-95 shrink-0 ml-2">
         INSTALAR
       </button>
     </div>
 
     <!-- MAIN VIEW CONTAINER -->
-    <main id="main-content" class="flex-1 p-4 pb-28">
+    <main id="main-content" class="flex-1 p-3.5 sm:p-4 pb-36 overflow-x-hidden">
 
       <!-- 1. ABA TRILHA DUOLINGO & ANÁLISE DE EDITAL -->
       <div id="tab-map" class="space-y-4">
@@ -318,9 +343,9 @@
           <button onclick="openModal('paywall-modal')" class="text-[9px] font-black text-amber-400 hover:underline shrink-0">Remover Ads</button>
         </div>
 
-        <!-- Top Toolbar de Questões & Filtros -->
-        <div class="flex items-center justify-between gap-2">
-          <select id="subject-filter" onchange="filterQuestionsBySubject()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-200 outline-none shadow-sm flex-1 truncate">
+        <!-- Top Toolbar de Questões & Filtros (Mobile First & Adaptive) -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+          <select id="subject-filter" onchange="filterQuestionsBySubject()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-200 outline-none shadow-sm flex-1 truncate">
             <option value="all">📚 Todas as Matérias do Edital</option>
             <option value="Legislação de Assistência Social">Legislação Social (LOAS/SUAS)</option>
             <option value="Direito da Criança e Adolescente">ECA & Idoso</option>
@@ -329,42 +354,44 @@
             <option value="Direito Constitucional">Direito Constitucional</option>
           </select>
 
-          <button onclick="generateNewAiQuestion()" class="btn-3d-purple text-white px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-sm shrink-0">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span>Nova Questão IA</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="generateNewAiQuestion()" class="btn-3d-purple text-white px-3 py-2 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm flex-1 sm:flex-none">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Nova Questão IA</span>
+            </button>
 
-          <button onclick="openModal('pdf-modal')" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1.5 rounded-xl flex items-center gap-1 hover:bg-emerald-500/20 transition-colors shadow-sm shrink-0">
-            <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-emerald-400"></i>
-            <span>PDFs</span>
-          </button>
+            <button onclick="openModal('pdf-modal')" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-2 rounded-xl flex items-center justify-center gap-1 hover:bg-emerald-500/20 transition-colors shadow-sm shrink-0">
+              <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>PDFs</span>
+            </button>
+          </div>
         </div>
 
         <!-- Badges da Questão Atual -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span id="quiz-banca" class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-lg uppercase shadow-sm">IBFC / CEBRASPE</span>
-            <span id="quiz-subject" class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-lg truncate max-w-[180px] border border-slate-700">Legislação Social</span>
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5 sm:gap-2 truncate">
+            <span id="quiz-banca" class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg uppercase shadow-sm shrink-0">IBFC / CEBRASPE</span>
+            <span id="quiz-subject" class="bg-slate-800 text-slate-300 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-lg truncate border border-slate-700">Legislação Social</span>
           </div>
-          <span id="quiz-type-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-lg">Múltipla Escolha</span>
+          <span id="quiz-type-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-lg shrink-0">Múltipla Escolha</span>
         </div>
 
         <!-- Enunciado -->
-        <div class="bg-slate-800/90 border border-slate-700/80 rounded-3xl p-5 card-shadow">
-          <p id="quiz-statement" class="text-sm font-semibold text-slate-100 leading-relaxed whitespace-pre-line">
+        <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl sm:rounded-3xl p-4 sm:p-5 card-shadow">
+          <p id="quiz-statement" class="text-xs sm:text-sm font-semibold text-slate-100 leading-relaxed whitespace-pre-line">
             Carregando questão...
           </p>
         </div>
 
         <!-- Alternativas -->
-        <div id="quiz-options" class="space-y-3"></div>
+        <div id="quiz-options" class="space-y-2.5 sm:space-y-3"></div>
 
         <!-- Explicação da IA & Base Legal + Botão de Transformar em Flashcard -->
-        <div id="quiz-explanation-box" class="hidden p-4 rounded-2xl border space-y-3 card-shadow">
-          <div id="quiz-status-badge" class="flex items-center gap-2 font-black text-sm"></div>
+        <div id="quiz-explanation-box" class="hidden p-3.5 sm:p-4 rounded-2xl border space-y-3 card-shadow mb-2">
+          <div id="quiz-status-badge" class="flex items-center gap-2 font-black text-xs sm:text-sm"></div>
           <p id="quiz-explanation-text" class="text-xs text-slate-200 leading-relaxed font-medium"></p>
           
-          <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl flex items-start gap-2 text-[11px] text-amber-200">
+          <div class="bg-amber-500/10 border border-amber-500/30 p-2.5 sm:p-3 rounded-xl flex items-start gap-2 text-[11px] text-amber-200">
             <i data-lucide="scale" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
             <div>
               <span class="font-bold text-amber-300 block mb-0.5">Fundamentação Jurídica / Lei Seca:</span>
@@ -380,7 +407,7 @@
         </div>
 
         <!-- Botão de Ação -->
-        <button id="quiz-action-btn" onclick="handleQuizAction()" class="w-full py-4 rounded-2xl font-extrabold text-sm btn-3d-green text-white mt-4 tracking-wide shadow-md">
+        <button id="quiz-action-btn" onclick="handleQuizAction()" class="w-full py-3.5 sm:py-4 rounded-2xl font-extrabold text-xs sm:text-sm btn-3d-green text-white mt-3 tracking-wide shadow-md">
           VERIFICAR RESPOSTA
         </button>
       </div>
@@ -389,10 +416,10 @@
       <div id="tab-anki" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <i data-lucide="brain" class="w-6 h-6 text-indigo-400"></i>
+            <i data-lucide="brain" class="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400"></i>
             <div>
-              <h3 class="text-base font-black text-slate-100">Anki: Repetição Espaçada</h3>
-              <p class="text-[11px] text-slate-400">Motor SuperMemo SM-2 para retenção de lei seca</p>
+              <h3 class="text-sm sm:text-base font-black text-slate-100">Anki: Repetição Espaçada</h3>
+              <p class="text-[10px] sm:text-[11px] text-slate-400">Motor SuperMemo SM-2 para retenção de lei seca</p>
             </div>
           </div>
           <div class="flex items-center gap-1.5">
@@ -406,33 +433,33 @@
         </div>
 
         <!-- Flashcard com Efeito 3D Flip -->
-        <div class="perspective-card w-full min-h-[300px] cursor-pointer mt-2" onclick="flipFlashcard()">
-          <div id="anki-card-inner" class="flip-inner relative w-full min-h-[300px] bg-slate-800/95 border-2 border-slate-700 rounded-3xl p-6 card-shadow flex flex-col justify-between">
+        <div class="perspective-card w-full min-h-[260px] sm:min-h-[300px] cursor-pointer mt-2" onclick="flipFlashcard()">
+          <div id="anki-card-inner" class="flip-inner relative w-full min-h-[260px] sm:min-h-[300px] bg-slate-800/95 border-2 border-slate-700 rounded-3xl p-5 sm:p-6 card-shadow flex flex-col justify-between">
             
             <!-- Frente -->
-            <div id="anki-front" class="backface-hidden flex flex-col justify-between h-full space-y-6">
+            <div id="anki-front" class="backface-hidden flex flex-col justify-between h-full space-y-4 sm:space-y-6">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] uppercase font-black text-slate-400 tracking-wider">FRENTE • CONCEITO</span>
                 <span id="anki-subject-badge" class="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-indigo-500/30">SEDES DF</span>
               </div>
-              <p id="anki-front-text" class="text-base font-bold text-slate-100 leading-relaxed text-center my-auto">
+              <p id="anki-front-text" class="text-sm sm:text-base font-bold text-slate-100 leading-relaxed text-center my-auto px-2">
                 O que é a Assistência Social segundo o Art. 1º da LOAS (Lei 8.742/93)?
               </p>
-              <p class="text-xs text-slate-400 text-center flex items-center justify-center gap-1 font-semibold">
+              <p class="text-[11px] sm:text-xs text-slate-400 text-center flex items-center justify-center gap-1 font-semibold">
                 <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i> Toque no card para virar o verso
               </p>
             </div>
 
             <!-- Verso (Flipped) -->
-            <div id="anki-back" class="rotate-180-back backface-hidden absolute inset-0 p-6 flex flex-col justify-between bg-slate-850 rounded-3xl border-2 border-indigo-500/80 shadow-md">
-              <div class="flex items-center justify-between">
+            <div id="anki-back" class="rotate-180-back backface-hidden absolute inset-0 p-4 sm:p-6 flex flex-col justify-between bg-slate-850 rounded-3xl border-2 border-indigo-500/80 shadow-md overflow-y-auto">
+              <div class="flex items-center justify-between mb-2">
                 <span class="text-[10px] uppercase font-black text-indigo-400 tracking-wider">VERSO • RESPOSTA & LEI SECA</span>
                 <span class="text-[10px] font-bold text-slate-400">Algoritmo SM-2</span>
               </div>
-              <div id="anki-back-text" class="my-auto whitespace-pre-line text-xs font-bold text-slate-100 leading-relaxed bg-slate-900/90 p-4 rounded-2xl border border-slate-700 card-shadow">
+              <div id="anki-back-text" class="my-auto whitespace-pre-line text-xs font-bold text-slate-100 leading-relaxed bg-slate-900/90 p-3 sm:p-4 rounded-2xl border border-slate-700 card-shadow">
                 A Assistência Social é Política de Seguridade Social NÃO CONTRIBUTIVA...
               </div>
-              <div class="flex items-center justify-between text-[11px] text-indigo-300 font-bold bg-indigo-950/40 p-2.5 rounded-xl border border-indigo-800/40">
+              <div class="flex items-center justify-between text-[10px] sm:text-[11px] text-indigo-300 font-bold bg-indigo-950/40 p-2 sm:p-2.5 rounded-xl border border-indigo-800/40 mt-2">
                 <span>Intervalo: <strong id="anki-interval" class="text-white">1 dia</strong></span>
                 <span>Facilidade: <strong id="anki-ease" class="text-white">2.5</strong></span>
                 <span>Reps: <strong id="anki-reps" class="text-white">0</strong></span>
@@ -441,8 +468,8 @@
           </div>
         </div>
 
-        <!-- Botões SM-2 de Avaliação -->
-        <div id="anki-controls" class="grid grid-cols-4 gap-2 pt-2">
+        <!-- Botões SM-2 de Avaliação (Adaptive Mobile Grid) -->
+        <div id="anki-controls" class="grid grid-cols-4 gap-1.5 sm:gap-2 pt-2 mb-4">
           <button onclick="reviewCard(1)" class="btn-3d-red py-3 rounded-2xl text-xs font-black text-white flex flex-col items-center shadow-md">
             <span>Errei</span>
             <span class="text-[9px] font-normal opacity-90">1 dia</span>
@@ -534,25 +561,25 @@
 
     </main>
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-6 py-3 flex items-center justify-between z-40 shadow-lg">
-      <button onclick="switchTab('map')" id="nav-map" class="flex flex-col items-center gap-1 text-emerald-400 transition-all font-black">
-        <i data-lucide="map" class="w-5 h-5"></i>
+    <!-- Bottom Navigation Bar (Responsive & Safe Area aware) -->
+    <nav class="fixed bottom-0 left-0 right-0 w-full max-w-full sm:max-w-md mx-auto bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-3 sm:px-6 py-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] flex items-center justify-around z-40 shadow-lg">
+      <button onclick="switchTab('map')" id="nav-map" class="flex flex-col items-center gap-0.5 sm:gap-1 text-emerald-400 transition-all font-black py-1 px-2.5 rounded-xl">
+        <i data-lucide="map" class="w-4 h-4 sm:w-5 sm:h-5"></i>
         <span class="text-[10px]">Trilha</span>
       </button>
 
-      <button onclick="switchTab('quiz')" id="nav-quiz" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold">
-        <i data-lucide="layers" class="w-5 h-5"></i>
+      <button onclick="switchTab('quiz')" id="nav-quiz" class="flex flex-col items-center gap-0.5 sm:gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold py-1 px-2.5 rounded-xl">
+        <i data-lucide="layers" class="w-4 h-4 sm:w-5 sm:h-5"></i>
         <span class="text-[10px]">Questões</span>
       </button>
 
-      <button onclick="switchTab('anki')" id="nav-anki" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold">
-        <i data-lucide="brain" class="w-5 h-5"></i>
+      <button onclick="switchTab('anki')" id="nav-anki" class="flex flex-col items-center gap-0.5 sm:gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold py-1 px-2.5 rounded-xl">
+        <i data-lucide="brain" class="w-4 h-4 sm:w-5 sm:h-5"></i>
         <span class="text-[10px]">Anki SM-2</span>
       </button>
 
-      <button onclick="switchTab('stats')" id="nav-stats" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold">
-        <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+      <button onclick="switchTab('stats')" id="nav-stats" class="flex flex-col items-center gap-0.5 sm:gap-1 text-slate-400 hover:text-slate-200 transition-all font-bold py-1 px-2.5 rounded-xl">
+        <i data-lucide="bar-chart-3" class="w-4 h-4 sm:w-5 sm:h-5"></i>
         <span class="text-[10px]">Perfil</span>
       </button>
     </nav>
@@ -1401,7 +1428,7 @@
       container.innerHTML = '<div class="absolute top-4 bottom-4 w-2.5 bg-slate-800 rounded-full z-0"></div>';
 
       stages.forEach((stage, index) => {
-        const xOffset = index % 2 === 0 ? '-translate-x-6' : 'translate-x-6';
+        const xOffset = index % 2 === 0 ? '-translate-x-4 sm:-translate-x-6' : 'translate-x-4 sm:translate-x-6';
         const node = document.createElement('div');
         node.className = `flex flex-col items-center z-10 ${xOffset}`;
 
@@ -1420,12 +1447,12 @@
 
         node.innerHTML = `
           <div class="relative cursor-pointer" onclick="startStage(${stage.id}, '${stage.subject}')">
-            <div class="w-20 h-20 rounded-full border-4 ${btnBg} flex flex-col items-center justify-center transition-all hover:scale-105 active:translate-y-1">
-              <span class="text-2xl mb-0.5">${stage.icon}</span>
+            <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full border-4 ${btnBg} flex flex-col items-center justify-center transition-all hover:scale-105 active:translate-y-1">
+              <span class="text-xl sm:text-2xl mb-0.5">${stage.icon}</span>
               ${badge}
             </div>
-            <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-slate-800 border border-slate-700 px-2.5 py-0.5 rounded-xl text-center shadow-md">
-              <p class="text-[10px] font-black text-slate-200">${stage.title}</p>
+            <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 max-w-[130px] sm:max-w-[150px] bg-slate-800/95 border border-slate-700 px-2 py-0.5 rounded-xl text-center shadow-md backdrop-blur-sm pointer-events-none">
+              <p class="text-[9px] sm:text-[10px] font-black text-slate-200 truncate">${stage.title}</p>
             </div>
           </div>
         `;
